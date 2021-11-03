@@ -1,0 +1,19 @@
+table, th, td {
+    border: 1px solid black;
+}
+
+th, td {
+    height: 1em;
+    width: 100px;
+    background-color: white;
+}
+
+input {
+    margin: 2px 2px 2px 2px;
+}
+
+.container {
+    background-color: #f4f4f4;
+    padding: 2px 10px 2px 10px;
+    margin: 10px 2px 10px 2px;
+}

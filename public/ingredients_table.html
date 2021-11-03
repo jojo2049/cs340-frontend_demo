@@ -1,18 +1,72 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="stylesheet" href="./../style.css">
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IngredientsTable</title>
 </head>
 <body>
+    <div>
+        <a href="/home">Home</a>
+        <a href="/users">Users</a>
+        <a href="/recipes">Recipes</a>
+        <a href="/food_items">FoodItems</a>
+        <a href="/genres">Genres</a>
+        <a href="/genres_table">GenresTable</a>
+    </div>
+
     <h1>IngredientsTable</h1>
-    <a href="/home">Home</a>
-    <a href="/users">Users</a>
-    <a href="/recipes">Recipes</a>
-    <a href="/food_items">FoodItems</a>
-    <a href="/genres">Genres</a>
-    <a href="/genres_table">GenresTable</a>
+    <div class="container">
+        <h3>Insert FoodItem into Recipe</h3>
+        <form>
+            <label for="recipe_id">Recipe ID:</label>
+            <input type="text"><br>
+            <label for="food_item_id">FoodItem ID:</label>
+            <input type="text"><br>
+            <label for="quantity">FoodItem Quantity:</label>
+            <input type="text"><br>
+            <input type="submit" value="INSERT new FoodItem into Recipe">
+        </form>
+    </div>
+
+    <div class="container">
+        <h3>Delete FoodItem from Recipe</h3>
+        <form>
+            <label for="recipe_id">Recipe ID:</label>
+            <input type="text"><br>
+            <label for="food_item_id">FoodItem ID:</label>
+            <input type="text"><br>
+            <input type="submit" value="DELETE FoodItem from Recipe">
+        </form>
+    </div>
+
+    <div class="container">
+        <h3>IngredientsTable Data</h3>
+        <table>
+            <tr>
+                <th>recipe_id</th>
+                <th>food_item_id</th>
+                <th>quantity</th>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        </table>
+    </div>
+
 </body>
 </html>
