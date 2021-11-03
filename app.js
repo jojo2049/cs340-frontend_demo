@@ -16,6 +16,7 @@ app.get("/food_items",          sendFile("food_items.html"));
 app.get("/genres",              sendFile("genres.html"));
 app.get("/ingredients_table",   sendFile("ingredients_table.html"));
 app.get("/genres_table",        sendFile("genres_table.html"));
+app.get("/style.css",           sendFile("style.css"));
 
 // == LISTENER
 app.listen(PORT, () => {
