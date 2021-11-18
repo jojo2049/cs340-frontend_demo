@@ -20,10 +20,12 @@ const app = express();
 // Tell express to use handlebars when rendering webpages.
 app.engine("handlebars", handlebars.engine);
 app.set("view engine", "handlebars");
+// Tell express to serve static files from the public directory.
+// This is only for the non-handlebar pages.
+app.use(express.static("public"));
 
 
 // == ROUTES
-let sendFile = file_name => (req, res) => res.sendFile(file_name, {root: ROOT});
 
 // Using handlebars for rendering and query the mysql database.
 app.get("/users", (req, res) => {
@@ -54,6 +56,9 @@ app.get("/users", (req, res) => {
 });
 
 
+// Helper function for just responding with an html file.
+let sendFile = file_name => (req, res) => res.sendFile(file_name, {root: ROOT});
+// TODO: Update these to handlebars
 app.get("/home",                sendFile("index.html"));
 // app.get("/users",               sendFile("users.html"));
 app.get("/recipes",             sendFile("recipes.html"));
