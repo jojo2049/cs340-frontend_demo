@@ -1,24 +1,27 @@
 {
-  "name": "cs340-frontend_demo",
+  "name": "cs340_final_project",
   "version": "1.0.0",
-  "description": "Frontend demo for cs340",
+  "description": "Final project demo for cs340",
   "main": "app.js",
   "dependencies": {
     "express": "^4.17.1",
-    "forever": "^4.0.1"
+    "express-handlebars": "^6.0.1",
+    "forever": "^4.0.1",
+    "mysql": "^2.18.1"
   },
   "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node app.js",
+    "forever": "node ./node_modules/forever/bin/forever app.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/MooseOnTheRocks/cs340-frontend_demo.git"
+    "url": "git+https://github.com/MooseOnTheRocks/cs340_final_project.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/MooseOnTheRocks/cs340-frontend_demo/issues"
+    "url": "https://github.com/MooseOnTheRocks/cs340_final_project/issues"
   },
-  "homepage": "https://github.com/MooseOnTheRocks/cs340-frontend_demo#readme"
+  "homepage": "https://github.com/MooseOnTheRocks/cs340_final_project#readme"
 }
