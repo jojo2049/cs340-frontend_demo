@@ -34,7 +34,7 @@ app.use("/static", express.static("public"));
 
 // == ROUTES
 
-app.post('/users-insert', (req, res) => {
+app.post('/users/insert', (req, res) => {
     // SQL query.
     // The '?' will be replaced, in order, with the values in the list passed to pool.query.
     let sql = "INSERT INTO Users (first_name, last_name, email) VALUES (?, ?, ?);"
@@ -81,11 +81,8 @@ app.get("/users", (req, res) => {
     });
 });
 
-app.post('/food_items-insert', (req, res) => {
-    // SQL query.
-    // The '?' will be replaced, in order, with the values in the list passed to pool.query.
+app.post('/food_items/insert', (req, res) => {
     let sql = "INSERT INTO FoodItems (name, calorie) VALUES (?, ?);"
-    // Values to safely insert into the SQL query.
     let values = [req.body["name"], req.body["calorie"]];
     pool.query(sql, values, (error, results, fields) => {
         if (error) {
@@ -112,6 +109,34 @@ app.get("/food_items", (req, res) => {
     });
 });
 
+
+app.post('/recipes/insert', (req, res) => {
+    let sql = "INSERT INTO Recipes (user_id, food_item_id, quantity, prep_time) VALUES (?, ?, ?, ?);"
+    let values = [req.body["user_id"], req.body["food_item_id"], req.body["quantity"], req.body["prep_time"]];
+    pool.query(sql, values, (error, results, fields) => {
+        if (error) {
+            res.write(JSON.stringify(error));
+            res.end();
+            return;
+        }
+        res.json(results.json);
+    });
+});
+
+app.get("/recipes", (req, res) => {
+    pool.query("SELECT * FROM Recipes", (error, results, fields) => {
+        if (error) {
+            res.write(JSON.stringify(error));
+            res.end();
+            return;
+        }
+        let context = {};
+        context.recipes = results;
+        context.title = "Recipes";
+        context.scripts = ["recipes.js"];
+        res.render("recipes", context);
+    });
+});
 
 // Helper function for just responding with an html file.
 let sendFile = file_name => (req, res) => res.sendFile(file_name, {root: ROOT});

@@ -1,0 +1,95 @@
+<h1>Recipes</h1>
+<p>View existing Recipes data, insert, update, and delete recipes.</p>
+<p>Select recipes based on: Genres, Ingredients, or User.</p>
+
+<div class="container">
+    <h3>Insert Recipe</h3>
+    <form id="form_recipes_insert">
+        <label for="user_id">User ID:</label>
+        <input type="text" name="user_id"><br>
+        <label for="food_item_id">FoodItem ID:</label>
+        <input type="text" name="food_item_id"><br>
+        <label for="quantity">Quantity:</label>
+        <input type="text" name="quantity"><br>
+        <label for="prep_time">Preptime:</label>
+        <input type="text" name="prep_time"><br>
+        <input type="submit" value="INSERT new Recipe">
+    </form>
+</div>
+
+<div class="container">
+    <h3>Update Recipe</h3>
+    <form>
+        <label for="recipe_id">Recipe ID:</label>
+        <input type="text"><br>
+        <label for="user_id">User ID:</label>
+        <input type="text"><br>
+        <label for="food_item_id">FoodItem ID:</label>
+        <input type="text"><br>
+        <label for="quantity">Quantity:</label>
+        <input type="text"><br>
+        <label for="prep_time">Preptime:</label>
+        <input type="text"><br>
+        <input type="submit" value="UPDATE Recipe">
+    </form>
+</div>
+
+<div class="container">
+    <h3>Delete Recipe</h3>
+    <form>
+        <label for="recipe_id">Recipe ID:</label>
+        <input type="text"><br>
+        <input type="submit" value="DELETE Recipe">
+    </form>
+</div>
+
+<div class="container">
+    <h3>Select Recipes in Genre</h3>
+    <form>
+        <label for="recipe_id">Genre ID:</label>
+        <input type="text"><br>
+        <input type="submit" value="SELECT Recipes in Genre">
+    </form>
+</div>
+
+<div class="container">
+    <h3>Select Recipes with FoodItem</h3>
+    <form>
+        <label for="food_item_id">FoodItem ID:</label>
+        <input type="text"><br>
+        <input type="submit" value="SELECT Recipes with FoodItem">
+    </form>
+</div>
+
+<div class="container">
+    <h3>Select Recipes by User</h3>
+    <form>
+        <label for="user_id">User ID:</label>
+        <input type="text"><br>
+        <input type="submit" value="SELECT Recipes by User">
+    </form>
+</div>
+
+<div class="container">
+    <h3>Recipes Data</h3>
+    <table>
+        <tr>
+            <th>recipe_id</th>
+            <th>user_id</th>
+            <th>food_item_id</th>
+            <th>quantity</th>
+            <th>prep_time</th>
+        </tr>
+        {{#each recipes}}
+        {{#with this}}
+        <tr>
+            <td>{{recipe_id}}</td>
+            <td>{{user_id}}</td>
+            <td>{{food_item_id}}</td>
+            <td>{{quantity}}</td>
+            <td>{{prep_time}}</td>
+        </tr>
+        {{/with}}
+        {{/each}}
+    </table>
+</div>

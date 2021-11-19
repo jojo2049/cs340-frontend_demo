@@ -4,7 +4,7 @@ function insertFoodItem(form) {
     let calorie = elements["calories"].value;
     let data = { name, calorie };
     // POST the form data to server.
-    postJSON("food_items-insert", data)
+    postJSON("food_items/insert", data)
     // Refresh the page once we get a response.
     .then(_ => window.location.reload());
 }
