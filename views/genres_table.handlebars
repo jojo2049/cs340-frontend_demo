@@ -1,0 +1,31 @@
+<h1>GenresTable</h1>
+<p>View existing Genre and FoodItem relationships and insert new FoodItems into Genres.</p>
+
+<div class="container">
+    <h3>Insert FoodItem into Genre</h3>
+    <form id="form_genres_table_insert">
+        <label for="genre_id">Genre ID:</label>
+        <input type="text" name="genre_id"><br>
+        <label for="food_item_id">FoodItem ID:</label>
+        <input type="text" name="food_item_id"><br>
+        <input type="submit" value="INSERT new FoodItem in Genres">
+    </form>
+</div>
+
+<div class="container">
+    <h3>GenresTable Data</h3>
+    <table>
+        <tr>
+            <th>genre_id</th>
+            <th>food_item_id</th>
+        </tr>
+        {{#each genres_table}}
+        {{#with this}}
+        <tr>
+            <td>{{genre_id}}</td>
+            <td>{{food_item_id}}</td>
+        </tr>
+        {{/with}}
+        {{/each}}
+    </table>
+</div>

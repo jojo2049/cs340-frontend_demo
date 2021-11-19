@@ -166,6 +166,34 @@ app.get("/genres", (req, res) => {
     });
 });
 
+app.post('/genres_table/insert', (req, res) => {
+    let sql = "INSERT INTO GenresTable (genre_id, food_item_id) VALUES (?, ?);"
+    let values = [req.body["genre_id"], req.body["food_item_id"]];
+    pool.query(sql, values, (error, results, fields) => {
+        if (error) {
+            res.write(JSON.stringify(error));
+            res.end();
+            return;
+        }
+        res.json(results.json);
+    });
+});
+
+app.get("/genres_table", (req, res) => {
+    pool.query("SELECT * FROM GenresTable", (error, results, fields) => {
+        if (error) {
+            res.write(JSON.stringify(error));
+            res.end();
+            return;
+        }
+        let context = {};
+        context.genres_table = results;
+        context.title = "GenresTable";
+        context.scripts = ["genres_table.js"];
+        res.render("genres_table", context);
+    });
+});
+
 // Helper function for just responding with an html file.
 let sendFile = file_name => (req, res) => res.sendFile(file_name, {root: ROOT});
 // TODO: Update these to handlebars
