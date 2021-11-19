@@ -1,25 +1,17 @@
-let form = document.querySelector("#form_user_insert");
-if (form) {
-    form.addEventListener("submit", (event) => {
-        // Stop the default form behavior (post data and refresh/redirect page).
-        event.preventDefault();
-        // Send an HTTP POST request
-        fetch("users-insert", {
-            method: "POST",
-            // Specify we are sending JSON data.
-            headers: {
-                "Accept": "application/json",
-                "Content-Type": "application/json",
-            },
-            // Data to be sent.
-            body: JSON.stringify({
-                first_name: form.elements["first_name"].value,
-                last_name: form.elements["last_name"].value,
-                email: form.elements["email"].value
-            })
-        })
-        // Upon receiving a response from the server,
-        // reload the page for the most recent 
-        .then(response => location.reload());
-    });
+function insertUser(form) {
+    let elements = form.elements;
+    let first_name = elements["first_name"].value;
+    let last_name = elements["last_name"].value;
+    let email = elements["email"].value;
+    let data = { first_name, last_name, email };
+    // POST the form data to server.
+    postJSON("users-insert", data)
+    // Refresh the page once we get a response.
+    .then(_ => window.location.reload());
 }
+
+function initUsers() {
+    override("#form_user_insert", "submit", insertUser);
+}
+
+window.onload = initUsers;

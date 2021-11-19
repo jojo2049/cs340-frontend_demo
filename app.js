@@ -2,7 +2,7 @@
 const path = require("path");
 const express = require("express");
 // defaultLayout corresponds to main.handlebars.
-const handlebars = require("express-handlebars").create({defaultLayout: "main"});
+const handlebars = require("express-handlebars").create({defaultLayout: "default"});
 // The { pool } syntax is called destructuring.
 // Lets us write:
 //     const { pool } = require("./dbcon");
@@ -40,6 +40,7 @@ app.post('/users-insert', (req, res) => {
     let sql = "INSERT INTO Users (first_name, last_name, email) VALUES (?, ?, ?);"
     // Values to safely insert into the SQL query.
     let values = [req.body["first_name"], req.body["last_name"], req.body["email"]];
+    console.log("Insert: " + values);
     pool.query(sql, values, (error, results, fields) => {
         if (error) {
             res.write(JSON.stringify(error));
@@ -70,6 +71,7 @@ app.get("/users", (req, res) => {
         // Properties assigned to context are accessable within the template.
         context.users = results;
         context.title = "Users";
+        context.scripts = ["users.js"];
         // res.render(template, context) where template is the
         // name of the handlebars template file to be rendered.
         // Note: don't write the file extension (.handlebars) just the name.
@@ -84,7 +86,7 @@ app.post('/food_items-insert', (req, res) => {
     // The '?' will be replaced, in order, with the values in the list passed to pool.query.
     let sql = "INSERT INTO FoodItems (name, calorie) VALUES (?, ?);"
     // Values to safely insert into the SQL query.
-    let values = [req.body["name"], req.body["calories"]];
+    let values = [req.body["name"], req.body["calorie"]];
     pool.query(sql, values, (error, results, fields) => {
         if (error) {
             res.write(JSON.stringify(error));
@@ -105,6 +107,7 @@ app.get("/food_items", (req, res) => {
         let context = {};
         context.food_items = results;
         context.title = "FoodItems";
+        context.scripts = ["food_items.js"];
         res.render("food_items", context);
     });
 });
