@@ -40,7 +40,6 @@ app.post('/users/insert', (req, res) => {
     let sql = "INSERT INTO Users (first_name, last_name, email) VALUES (?, ?, ?);"
     // Values to safely insert into the SQL query.
     let values = [req.body["first_name"], req.body["last_name"], req.body["email"]];
-    console.log("Insert: " + values);
     pool.query(sql, values, (error, results, fields) => {
         if (error) {
             res.write(JSON.stringify(error));
@@ -194,6 +193,34 @@ app.get("/genres_table", (req, res) => {
     });
 });
 
+app.post('/ingredients_table/insert', (req, res) => {
+    let sql = "INSERT INTO IngredientsTable (recipe_id, food_item_id, quantity) VALUES (?, ?, ?);"
+    let values = [req.body["recipe_id"], req.body["food_item_id"], req.body["quantity"]];
+    pool.query(sql, values, (error, results, fields) => {
+        if (error) {
+            res.write(JSON.stringify(error));
+            res.end();
+            return;
+        }
+        res.json(results.json);
+    });
+});
+
+app.get("/ingredients_table", (req, res) => {
+    pool.query("SELECT * FROM IngredientsTable", (error, results, fields) => {
+        if (error) {
+            res.write(JSON.stringify(error));
+            res.end();
+            return;
+        }
+        let context = {};
+        context.ingredients_table = results;
+        context.title = "IngredientsTable";
+        context.scripts = ["ingredients_table.js"];
+        res.render("ingredients_table", context);
+    });
+});
+
 // Helper function for just responding with an html file.
 let sendFile = file_name => (req, res) => res.sendFile(file_name, {root: ROOT});
 // TODO: Update these to handlebars
@@ -201,9 +228,9 @@ app.get("/home",                sendFile("index.html"));
 // app.get("/users",               sendFile("users.html"));
 // app.get("/recipes",             sendFile("recipes.html"));
 // app.get("/food_items",          sendFile("food_items.html"));
-app.get("/genres",              sendFile("genres.html"));
-app.get("/ingredients_table",   sendFile("ingredients_table.html"));
-app.get("/genres_table",        sendFile("genres_table.html"));
+// app.get("/genres",              sendFile("genres.html"));
+// app.get("/ingredients_table",   sendFile("ingredients_table.html"));
+// app.get("/genres_table",        sendFile("genres_table.html"));
 app.get("/style.css",           sendFile("style.css"));
 
 // == LISTENER
