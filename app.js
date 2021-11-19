@@ -138,12 +138,40 @@ app.get("/recipes", (req, res) => {
     });
 });
 
+app.post('/genres/insert', (req, res) => {
+    let sql = "INSERT INTO Genres (name) VALUES (?);"
+    let values = [req.body["name"]];
+    pool.query(sql, values, (error, results, fields) => {
+        if (error) {
+            res.write(JSON.stringify(error));
+            res.end();
+            return;
+        }
+        res.json(results.json);
+    });
+});
+
+app.get("/genres", (req, res) => {
+    pool.query("SELECT * FROM Genres", (error, results, fields) => {
+        if (error) {
+            res.write(JSON.stringify(error));
+            res.end();
+            return;
+        }
+        let context = {};
+        context.genres = results;
+        context.title = "Genres";
+        context.scripts = ["genres.js"];
+        res.render("genres", context);
+    });
+});
+
 // Helper function for just responding with an html file.
 let sendFile = file_name => (req, res) => res.sendFile(file_name, {root: ROOT});
 // TODO: Update these to handlebars
 app.get("/home",                sendFile("index.html"));
 // app.get("/users",               sendFile("users.html"));
-app.get("/recipes",             sendFile("recipes.html"));
+// app.get("/recipes",             sendFile("recipes.html"));
 // app.get("/food_items",          sendFile("food_items.html"));
 app.get("/genres",              sendFile("genres.html"));
 app.get("/ingredients_table",   sendFile("ingredients_table.html"));

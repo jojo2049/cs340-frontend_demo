@@ -1,0 +1,29 @@
+<h1>Genres</h1>
+<p>View existing Genres data and insert new Genres.</p>
+
+<div class="container">
+    <h3>Insert Genre</h3>
+    <form id="form_genres_insert">
+        <label for="name">Name:</label>
+        <input type="text" name="name"><br>
+        <input type="submit" value="INSERT new Genre">
+    </form>
+</div>
+
+<div class="container">
+    <h3>Genres Data</h3>
+    <table>
+        <tr>
+            <th>genre_id</th>
+            <th>name</th>
+        </tr>
+        {{#each genres}}
+        {{#with this}}
+        <tr>
+            <td>{{genre_id}}</td>
+            <td>{{name}}</td>
+        </tr>
+        {{/with}}
+        {{/each}}
+    </table>
+</div>

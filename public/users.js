@@ -11,7 +11,7 @@ function insertUser(form) {
 }
 
 function initUsers() {
-    override("#form_user_insert", "submit", insertUser);
+    override("#form_users_insert", "submit", insertUser);
 }
 
 window.onload = initUsers;
