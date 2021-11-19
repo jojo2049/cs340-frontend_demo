@@ -24,25 +24,29 @@ app.set("view engine", "handlebars");
 // This is only for the non-handlebar pages.
 app.use(express.static("public"));
 // Express will handle url decoding of form POST data.
-// This automatically parses url encoded form data into req.body
 app.use(express.urlencoded({extended: true}));
+// Express will handle decoding of form JSON data.
+// This automatically parses JSON encoded form data into req.body
 app.use(express.json());
+// Redirect virtual path /static to serve files from real path /public.
+app.use("/static", express.static("public"));
 
 
 // == ROUTES
 
-app.post('/users-insert', function(req, res) {
-    console.log("insert user");
-    console.log(req.body);
+app.post('/users-insert', (req, res) => {
+    // SQL query.
+    // The '?' will be replaced, in order, with the values in the list passed to pool.query.
     let sql = "INSERT INTO Users (first_name, last_name, email) VALUES (?, ?, ?);"
-    pool.query(sql, [req.body["first_name"], req.body["last_name"], req.body["email"]], (error, results, fields) => {
+    // Values to safely insert into the SQL query.
+    let values = [req.body["first_name"], req.body["last_name"], req.body["email"]];
+    pool.query(sql, values, (error, results, fields) => {
         if (error) {
             res.write(JSON.stringify(error));
             res.end();
             return;
         }
-        console.log(results);
-        res.end();
+        res.json(results.json);
     });
 });
 
@@ -65,12 +69,43 @@ app.get("/users", (req, res) => {
         // Assign some properties to it.
         // Properties assigned to context are accessable within the template.
         context.users = results;
+        context.title = "Users";
         // res.render(template, context) where template is the
         // name of the handlebars template file to be rendered.
         // Note: don't write the file extension (.handlebars) just the name.
         // Any properties assigned to context are accessable from
         // the handlebars template using the {{prop}} syntax.
         res.render("users", context);
+    });
+});
+
+app.post('/food_items-insert', (req, res) => {
+    // SQL query.
+    // The '?' will be replaced, in order, with the values in the list passed to pool.query.
+    let sql = "INSERT INTO FoodItems (name, calorie) VALUES (?, ?);"
+    // Values to safely insert into the SQL query.
+    let values = [req.body["name"], req.body["calories"]];
+    pool.query(sql, values, (error, results, fields) => {
+        if (error) {
+            res.write(JSON.stringify(error));
+            res.end();
+            return;
+        }
+        res.json(results.json);
+    });
+});
+
+app.get("/food_items", (req, res) => {
+    pool.query("SELECT * FROM FoodItems", (error, results, fields) => {
+        if (error) {
+            res.write(JSON.stringify(error));
+            res.end();
+            return;
+        }
+        let context = {};
+        context.food_items = results;
+        context.title = "FoodItems";
+        res.render("food_items", context);
     });
 });
 
@@ -81,7 +116,7 @@ let sendFile = file_name => (req, res) => res.sendFile(file_name, {root: ROOT});
 app.get("/home",                sendFile("index.html"));
 // app.get("/users",               sendFile("users.html"));
 app.get("/recipes",             sendFile("recipes.html"));
-app.get("/food_items",          sendFile("food_items.html"));
+// app.get("/food_items",          sendFile("food_items.html"));
 app.get("/genres",              sendFile("genres.html"));
 app.get("/ingredients_table",   sendFile("ingredients_table.html"));
 app.get("/genres_table",        sendFile("genres_table.html"));
