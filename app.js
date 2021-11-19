@@ -23,9 +23,28 @@ app.set("view engine", "handlebars");
 // Tell express to serve static files from the public directory.
 // This is only for the non-handlebar pages.
 app.use(express.static("public"));
+// Express will handle url decoding of form POST data.
+// This automatically parses url encoded form data into req.body
+app.use(express.urlencoded({extended: true}));
+app.use(express.json());
 
 
 // == ROUTES
+
+app.post('/users-insert', function(req, res) {
+    console.log("insert user");
+    console.log(req.body);
+    let sql = "INSERT INTO Users (first_name, last_name, email) VALUES (?, ?, ?);"
+    pool.query(sql, [req.body["first_name"], req.body["last_name"], req.body["email"]], (error, results, fields) => {
+        if (error) {
+            res.write(JSON.stringify(error));
+            res.end();
+            return;
+        }
+        console.log(results);
+        res.end();
+    });
+});
 
 // Using handlebars for rendering and query the mysql database.
 app.get("/users", (req, res) => {

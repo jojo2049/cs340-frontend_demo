@@ -23,16 +23,38 @@
     
     <div class="container">
         <h3>Insert User</h3>
-        <form>
+        <form id="form_user_insert">
             <label for="first_name">First Name:</label>
-            <input type="text"><br>
+            <input type="text" id="first_name" name="first_name"><br>
             <label for="last_name">Last Name:</label>
-            <input type="text"><br>
+            <input type="text" id="last_name" name="last_name"><br>
             <label for="email">Email:</label>
-            <input type="text"><br>
+            <input type="text" id="email" name="email"><br>
             <input type="submit" value="INSERT new User">
         </form>
     </div>
+
+    <script>
+        let form = document.querySelector("#form_user_insert");
+        if (form) {
+            form.addEventListener("submit", (event) => {
+                event.preventDefault();
+                fetch("users-insert", {
+                    method: "POST",
+                    headers: {
+                        "Accept": "application/json",
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        first_name: form.elements["first_name"].value,
+                        last_name: form.elements["last_name"].value,
+                        email: form.elements["email"].value
+                    })
+                })
+                .then(response => location.reload());
+            });
+        }
+    </script>
 
     <div class="container">
         <h3>Users Data</h3>
