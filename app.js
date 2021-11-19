@@ -74,17 +74,81 @@ app.get("/users", (req, res) => {
     });
 });
 
+app.get("/food_items", (req, res) => {
+    pool.query("SELECT * FROM FoodItems", (error, results, fields) => {
+        if (error) {
+            res.write(JSON.stringify(error));
+            res.end();
+            return;
+        }
+        let context = {};
+        context.food_items = results;
+        res.render("food_items", context);
+    });
+});
+
+app.get("/recipes", (req, res) => {
+    pool.query("SELECT * FROM Recipes", (error, results, fields) => {
+        if (error) {
+            res.write(JSON.stringify(error));
+            res.end();
+            return;
+        }
+        let context = {};
+        context.recipes = results;
+        res.render("recipes", context);
+    });
+});
+
+app.get("/genres", (req, res) => {
+    pool.query("SELECT * FROM Genres", (error, results, fields) => {
+        if (error) {
+            res.write(JSON.stringify(error));
+            res.end();
+            return;
+        }
+        let context = {};
+        context.genres = results;
+        res.render("genres", context);
+    });
+});
+
+app.get("/ingredients_table", (req, res) => {
+    pool.query("SELECT * FROM IngredientsTable", (error, results, fields) => {
+        if (error) {
+            res.write(JSON.stringify(error));
+            res.end();
+            return;
+        }
+        let context = {};
+        context.ingredients_table = results;
+        res.render("ingredients_table", context);
+    });
+});
+
+app.get("/genres_table", (req, res) => {
+    pool.query("SELECT * FROM GenresTable", (error, results, fields) => {
+        if (error) {
+            res.write(JSON.stringify(error));
+            res.end();
+            return;
+        }
+        let context = {};
+        context.genres_table = results;
+        res.render("genres_table", context);
+    });
+});
 
 // Helper function for just responding with an html file.
 let sendFile = file_name => (req, res) => res.sendFile(file_name, {root: ROOT});
 // TODO: Update these to handlebars
 app.get("/home",                sendFile("index.html"));
 // app.get("/users",               sendFile("users.html"));
-app.get("/recipes",             sendFile("recipes.html"));
-app.get("/food_items",          sendFile("food_items.html"));
-app.get("/genres",              sendFile("genres.html"));
-app.get("/ingredients_table",   sendFile("ingredients_table.html"));
-app.get("/genres_table",        sendFile("genres_table.html"));
+// app.get("/recipes",             sendFile("recipes.html"));
+// app.get("/food_items",          sendFile("food_items.html"));
+// app.get("/genres",              sendFile("genres.html"));
+// app.get("/ingredients_table",   sendFile("ingredients_table.html"));
+// app.get("/genres_table",        sendFile("genres_table.html"));
 app.get("/style.css",           sendFile("style.css"));
 
 // == LISTENER

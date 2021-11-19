@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FoodItems</title>
+    <title>Genres</title>
 </head>
 <body>
     <div>
@@ -18,34 +18,30 @@
         <a href="/genres_table">GenresTable</a>
     </div>
 
-    <h1>FoodItems</h1>
-    <p>View existing FoodItems data and insert new FoodItems.</p>
+    <h1>Genres</h1>
+    <p>View existing Genres data and insert new Genres.</p>
     
     <div class="container">
-        <h3>Insert FoodItem</h3>
+        <h3>Insert Genre</h3>
         <form>
             <label for="name">Name:</label>
             <input type="text"><br>
-            <label for="calories">Calories:</label>
-            <input type="text"><br>
-            <input type="submit" value="INSERT new FoodItem">
+            <input type="submit" value="INSERT new Genre">
         </form>
     </div>
 
     <div class="container">
-        <h3>FoodItems Data</h3>
+        <h3>Genres Data</h3>
         <table>
             <tr>
-                <th>food_item_id</th>
+                <th>genre_id</th>
                 <th>name</th>
-                <th>calories</th>
             </tr>
-            {{#each food_items}}
+            {{#each genres}}
             {{#with this}}
             <tr>
-                <td>{{food_item_id}}</td>
+                <td>{{genre_id}}</td>
                 <td>{{name}}</td>
-                <td>{{calories}}</td>
             </tr>
             {{/with}}
             {{/each}}
