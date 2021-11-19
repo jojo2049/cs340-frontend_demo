@@ -14,22 +14,19 @@ const handlebars = require("express-handlebars").create({defaultLayout: "default
 const { pool } = require("./dbcon");
 
 const PORT = 5732;
-const ROOT = path.join(__dirname, "public");
+const ROOT = path.join(__dirname, "frontend");
 const app = express();
 
 // Tell express to use handlebars when rendering webpages.
 app.engine("handlebars", handlebars.engine);
 app.set("view engine", "handlebars");
-// Tell express to serve static files from the public directory.
-// This is only for the non-handlebar pages.
-app.use(express.static("public"));
 // Express will handle url decoding of form POST data.
 app.use(express.urlencoded({extended: true}));
 // Express will handle decoding of form JSON data.
 // This automatically parses JSON encoded form data into req.body
 app.use(express.json());
 // Redirect virtual path /static to serve files from real path /public.
-app.use("/static", express.static("public"));
+app.use("/static", express.static("frontend"));
 
 
 // == ROUTES
@@ -224,6 +221,7 @@ app.get("/ingredients_table", (req, res) => {
 // Helper function for just responding with an html file.
 let sendFile = file_name => (req, res) => res.sendFile(file_name, {root: ROOT});
 // TODO: Update these to handlebars
+app.get("/",                    sendFile("index.html"));
 app.get("/home",                sendFile("index.html"));
 // app.get("/users",               sendFile("users.html"));
 // app.get("/recipes",             sendFile("recipes.html"));
@@ -231,7 +229,7 @@ app.get("/home",                sendFile("index.html"));
 // app.get("/genres",              sendFile("genres.html"));
 // app.get("/ingredients_table",   sendFile("ingredients_table.html"));
 // app.get("/genres_table",        sendFile("genres_table.html"));
-app.get("/style.css",           sendFile("style.css"));
+// app.get("/style.css",           sendFile("style.css"));
 
 // == LISTENER
 app.listen(PORT, () => {

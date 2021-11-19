@@ -13,7 +13,7 @@
   "devDependencies": {},
   "scripts": {
     "test": "node app.js",
-    "forever": "node ./node_modules/forever/bin/forever app.js"
+    "forever": "./node_modules/forever/bin/forever app.js"
   },
   "repository": {
     "type": "git",
