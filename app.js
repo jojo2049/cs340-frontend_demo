@@ -2,7 +2,7 @@
 const path = require("path");
 const express = require("express");
 // defaultLayout corresponds to main.handlebars.
-const handlebars = require("express-handlebars").create({defaultLayout: "main"});
+const handlebars = require("express-handlebars").create({defaultLayout: "default"});
 // The { pool } syntax is called destructuring.
 // Lets us write:
 //     const { pool } = require("./dbcon");
@@ -14,35 +14,36 @@ const handlebars = require("express-handlebars").create({defaultLayout: "main"})
 const { pool } = require("./dbcon");
 
 const PORT = 5732;
-const ROOT = path.join(__dirname, "public");
+const ROOT = path.join(__dirname, "frontend");
 const app = express();
 
 // Tell express to use handlebars when rendering webpages.
 app.engine("handlebars", handlebars.engine);
 app.set("view engine", "handlebars");
-// Tell express to serve static files from the public directory.
-// This is only for the non-handlebar pages.
-app.use(express.static("public"));
 // Express will handle url decoding of form POST data.
-// This automatically parses url encoded form data into req.body
 app.use(express.urlencoded({extended: true}));
+// Express will handle decoding of form JSON data.
+// This automatically parses JSON encoded form data into req.body
 app.use(express.json());
+// Redirect virtual path /static to serve files from real path /public.
+app.use("/static", express.static("frontend"));
 
 
 // == ROUTES
 
-app.post('/users-insert', function(req, res) {
-    console.log("insert user");
-    console.log(req.body);
+app.post('/users/insert', (req, res) => {
+    // SQL query.
+    // The '?' will be replaced, in order, with the values in the list passed to pool.query.
     let sql = "INSERT INTO Users (first_name, last_name, email) VALUES (?, ?, ?);"
-    pool.query(sql, [req.body["first_name"], req.body["last_name"], req.body["email"]], (error, results, fields) => {
+    // Values to safely insert into the SQL query.
+    let values = [req.body["first_name"], req.body["last_name"], req.body["email"]];
+    pool.query(sql, values, (error, results, fields) => {
         if (error) {
             res.write(JSON.stringify(error));
             res.end();
             return;
         }
-        console.log(results);
-        res.end();
+        res.json(results.json);
     });
 });
 
@@ -65,12 +66,27 @@ app.get("/users", (req, res) => {
         // Assign some properties to it.
         // Properties assigned to context are accessable within the template.
         context.users = results;
+        context.title = "Users";
+        context.scripts = ["users.js"];
         // res.render(template, context) where template is the
         // name of the handlebars template file to be rendered.
         // Note: don't write the file extension (.handlebars) just the name.
         // Any properties assigned to context are accessable from
         // the handlebars template using the {{prop}} syntax.
         res.render("users", context);
+    });
+});
+
+app.post('/food_items/insert', (req, res) => {
+    let sql = "INSERT INTO FoodItems (name, calorie) VALUES (?, ?);"
+    let values = [req.body["name"], req.body["calorie"]];
+    pool.query(sql, values, (error, results, fields) => {
+        if (error) {
+            res.write(JSON.stringify(error));
+            res.end();
+            return;
+        }
+        res.json(results.json);
     });
 });
 
@@ -83,7 +99,23 @@ app.get("/food_items", (req, res) => {
         }
         let context = {};
         context.food_items = results;
+        context.title = "FoodItems";
+        context.scripts = ["food_items.js"];
         res.render("food_items", context);
+    });
+});
+
+
+app.post('/recipes/insert', (req, res) => {
+    let sql = "INSERT INTO Recipes (user_id, food_item_id, quantity, prep_time) VALUES (?, ?, ?, ?);"
+    let values = [req.body["user_id"], req.body["food_item_id"], req.body["quantity"], req.body["prep_time"]];
+    pool.query(sql, values, (error, results, fields) => {
+        if (error) {
+            res.write(JSON.stringify(error));
+            res.end();
+            return;
+        }
+        res.json(results.json);
     });
 });
 
@@ -96,22 +128,22 @@ app.get("/recipes", (req, res) => {
         }
         let context = {};
         context.recipes = results;
+        context.title = "Recipes";
+        context.scripts = ["recipes.js"];
         res.render("recipes", context);
     });
 });
 
-app.delete('/recipes-delete', function(req, res) {
-    console.log("delete recipe");
-    console.log(req.body);
-    let sql = "DELETE FROM Recipes WHERE recipe_id=(recipe_id) VALUES (?);"
-    pool.query(sql, [req.body["recipe_id"]], (error, results, fields) => {
+app.post('/genres/insert', (req, res) => {
+    let sql = "INSERT INTO Genres (name) VALUES (?);"
+    let values = [req.body["name"]];
+    pool.query(sql, values, (error, results, fields) => {
         if (error) {
             res.write(JSON.stringify(error));
             res.end();
             return;
         }
-        console.log(results);
-        res.end();
+        res.json(results.json);
     });
 });
 
@@ -124,20 +156,22 @@ app.get("/genres", (req, res) => {
         }
         let context = {};
         context.genres = results;
+        context.title = "Genres";
+        context.scripts = ["genres.js"];
         res.render("genres", context);
     });
 });
 
-app.get("/ingredients_table", (req, res) => {
-    pool.query("SELECT * FROM IngredientsTable", (error, results, fields) => {
+app.post('/genres_table/insert', (req, res) => {
+    let sql = "INSERT INTO GenresTable (genre_id, food_item_id) VALUES (?, ?);"
+    let values = [req.body["genre_id"], req.body["food_item_id"]];
+    pool.query(sql, values, (error, results, fields) => {
         if (error) {
             res.write(JSON.stringify(error));
             res.end();
             return;
         }
-        let context = {};
-        context.ingredients_table = results;
-        res.render("ingredients_table", context);
+        res.json(results.json);
     });
 });
 
@@ -150,13 +184,44 @@ app.get("/genres_table", (req, res) => {
         }
         let context = {};
         context.genres_table = results;
+        context.title = "GenresTable";
+        context.scripts = ["genres_table.js"];
         res.render("genres_table", context);
+    });
+});
+
+app.post('/ingredients_table/insert', (req, res) => {
+    let sql = "INSERT INTO IngredientsTable (recipe_id, food_item_id, quantity) VALUES (?, ?, ?);"
+    let values = [req.body["recipe_id"], req.body["food_item_id"], req.body["quantity"]];
+    pool.query(sql, values, (error, results, fields) => {
+        if (error) {
+            res.write(JSON.stringify(error));
+            res.end();
+            return;
+        }
+        res.json(results.json);
+    });
+});
+
+app.get("/ingredients_table", (req, res) => {
+    pool.query("SELECT * FROM IngredientsTable", (error, results, fields) => {
+        if (error) {
+            res.write(JSON.stringify(error));
+            res.end();
+            return;
+        }
+        let context = {};
+        context.ingredients_table = results;
+        context.title = "IngredientsTable";
+        context.scripts = ["ingredients_table.js"];
+        res.render("ingredients_table", context);
     });
 });
 
 // Helper function for just responding with an html file.
 let sendFile = file_name => (req, res) => res.sendFile(file_name, {root: ROOT});
 // TODO: Update these to handlebars
+app.get("/",                    sendFile("index.html"));
 app.get("/home",                sendFile("index.html"));
 // app.get("/users",               sendFile("users.html"));
 // app.get("/recipes",             sendFile("recipes.html"));
@@ -164,7 +229,7 @@ app.get("/home",                sendFile("index.html"));
 // app.get("/genres",              sendFile("genres.html"));
 // app.get("/ingredients_table",   sendFile("ingredients_table.html"));
 // app.get("/genres_table",        sendFile("genres_table.html"));
-app.get("/style.css",           sendFile("style.css"));
+// app.get("/style.css",           sendFile("style.css"));
 
 // == LISTENER
 app.listen(PORT, () => {

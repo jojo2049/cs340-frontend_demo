@@ -1,82 +1,38 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <link rel="stylesheet" href="./style.css">
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Users</title>
-</head>
-<body>
-    <div>
-        <a href="/home">Home</a>
-        <a href="/users">Users</a>
-        <a href="/recipes">Recipes</a>
-        <a href="/food_items">FoodItems</a>
-        <a href="/genres">Genres</a>
-        <a href="/ingredients_table">IngredientsTable</a>
-        <a href="/genres_table">GenresTable</a>
-    </div>
 
-    <h1>Users</h1>
-    <p>View existing Users data and insert new Users.</p>
-    
-    <div class="container">
-        <h3>Insert User</h3>
-        <form id="form_user_insert">
-            <label for="first_name">First Name:</label>
-            <input type="text" id="first_name" name="first_name"><br>
-            <label for="last_name">Last Name:</label>
-            <input type="text" id="last_name" name="last_name"><br>
-            <label for="email">Email:</label>
-            <input type="text" id="email" name="email"><br>
-            <input type="submit" value="INSERT new User">
-        </form>
-    </div>
+<h1>Users</h1>
+<p>View existing Users data and insert new Users.</p>
 
-    <script>
-        let form = document.querySelector("#form_user_insert");
-        if (form) {
-            form.addEventListener("submit", (event) => {
-                event.preventDefault();
-                fetch("users-insert", {
-                    method: "POST",
-                    headers: {
-                        "Accept": "application/json",
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        first_name: form.elements["first_name"].value,
-                        last_name: form.elements["last_name"].value,
-                        email: form.elements["email"].value
-                    })
-                })
-                .then(response => location.reload());
-            });
-        }
-    </script>
+<div class="container">
+    <h3>Insert User</h3>
+    <form id="form_users_insert">
+        <label for="first_name">First Name:</label>
+        <input type="text" id="first_name" name="first_name"><br>
+        <label for="last_name">Last Name:</label>
+        <input type="text" id="last_name" name="last_name"><br>
+        <label for="email">Email:</label>
+        <input type="text" id="email" name="email"><br>
+        <input type="submit" value="INSERT new User">
+    </form>
+</div>
 
-    <div class="container">
-        <h3>Users Data</h3>
-        <table>
-            <tr>
-                <th>user_id</th>
-                <th>first_name</th>
-                <th>last_name</th>
-                <th>email</th>
-            </tr>
-            {{#each users}}
-            {{#with this}}
-            <tr>
-                <td>{{user_id}}</td>
-                <td>{{first_name}}</td>
-                <td>{{last_name}}</td>
-                <td>{{email}}</td>
-            </tr>
-            {{/with}}
-            {{/each}}
-        </table>
-    </div>
-
-</body>
-</html>
+<div class="container">
+    <h3>Users Data</h3>
+    <table>
+        <tr>
+            <th>user_id</th>
+            <th>first_name</th>
+            <th>last_name</th>
+            <th>email</th>
+        </tr>
+        {{#each users}}
+        {{#with this}}
+        <tr>
+            <td>{{user_id}}</td>
+            <td>{{first_name}}</td>
+            <td>{{last_name}}</td>
+            <td>{{email}}</td>
+        </tr>
+        {{/with}}
+        {{/each}}
+    </table>
+</div>
