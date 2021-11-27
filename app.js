@@ -100,6 +100,21 @@ app.get("/recipes", (req, res) => {
     });
 });
 
+app.delete('/recipes-delete', function(req, res) {
+    console.log("delete recipe");
+    console.log(req.body);
+    let sql = "DELETE FROM Recipes WHERE recipe_id=(recipe_id) VALUES (?);"
+    pool.query(sql, [req.body["recipe_id"]], (error, results, fields) => {
+        if (error) {
+            res.write(JSON.stringify(error));
+            res.end();
+            return;
+        }
+        console.log(results);
+        res.end();
+    });
+});
+
 app.get("/genres", (req, res) => {
     pool.query("SELECT * FROM Genres", (error, results, fields) => {
         if (error) {
