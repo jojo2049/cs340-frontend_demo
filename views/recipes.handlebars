@@ -45,9 +45,9 @@
 
 <div class="container">
     <h3>Select Recipes in Genre</h3>
-    <form>
-        <label for="recipe_id">Genre ID:</label>
-        <input type="text"><br>
+    <form id="form_recipes_select_genre">
+        <label for="genre_id">Genre ID:</label>
+        <input type="text" name="genre_id"><br>
         <input type="submit" value="SELECT Recipes in Genre">
     </form>
 </div>
@@ -68,29 +68,4 @@
         <input type="text"><br>
         <input type="submit" value="SELECT Recipes by User">
     </form>
-</div>
-
-<div class="container">
-    <h3>Recipes Data</h3>
-    <table>
-        <tr>
-            <th>recipe_id</th>
-            <th>user_id</th>
-            <th>food_item_id</th>
-            <th>quantity</th>
-            <th>prep_time</th>
-        </tr>
-        {{#each recipes}}
-        {{#with this}}
-        <tr>
-            <td>{{recipe_id}}</td>
-            <td>{{user_id}}</td>
-            <td>{{food_item_id}}</td>
-            <td>{{quantity}}</td>
-            <td>{{prep_time}}</td>
-            <td><button>Delete</button></td>
-        </tr>
-        {{/with}}
-        {{/each}}
-    </table>
 </div>

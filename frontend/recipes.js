@@ -7,12 +7,28 @@ function insertRecipe(form) {
     let data = { user_id, food_item_id, quantity, prep_time };
     // POST the form data to server.
     postJSON("recipes/insert", data)
-    // Refresh the page once we get a response.
-    .then(_ => window.location.reload());
+    .then(res => res.text())
+    .then(text => {
+        replaceInnerHTML("#container_results_table", text);
+    });
+}
+
+function selectRecipesInGenre(form) {
+    let elements = form.elements;
+    console.log(elements)
+    let genre_id = elements["genre_id"].value;
+    let data = { genre_id };
+    console.log("SELECT query: " + JSON.stringify(data))
+    postJSON("recipes/select/genre", data)
+    .then(res => res.text())
+    .then(text => {
+        replaceInnerHTML("#container_results_table", text);
+    });
 }
 
 function initRecipes() {
     override("#form_recipes_insert", "submit", insertRecipe);
+    override("#form_recipes_select_genre", "submit", selectRecipesInGenre);
 }
 
 window.onload = initRecipes;
