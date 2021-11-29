@@ -39,7 +39,7 @@
             <td>{{recipe_id}}</td>
             <td>{{food_item_id}}</td>
             <td>{{quantity}}</td>
-            <td><button>Delete</button></td>
+            <td><button onclick="delete_ingredients_table({{recipe_id}}, {{food_item_id}})">Delete</button></td>
         </tr>
         {{/with}}
         {{/each}}

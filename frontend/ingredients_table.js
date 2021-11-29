@@ -14,4 +14,14 @@ function initIngredientsTable() {
     override("#form_ingredients_table_insert", "submit", insertIngredientsTable);
 }
 
+function delete_ingredients_table(recipe_id, food_item_id){
+    $.ajax({
+      url: '/ingredients_table/' + recipe_id + food_item_id,
+      type: 'DELETE',
+      success: function(result){
+        window.location.reload(true);
+      }
+    })
+  }
+
 window.onload = initIngredientsTable;

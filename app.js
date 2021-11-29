@@ -196,6 +196,21 @@ app.get("/ingredients_table", (req, res) => {
     });
 });
 
+app.delete("/ingredients_table/:recipe_id/:food_item_id", (req, res) => {
+    let sql = "DELETE FROM IngredientsTable WHERE (recipe_id, food_item_id) VALUES (?,?);"
+    let values = [req.params.recipe_id, req.params.food_item_id]
+    pool.query(sql, values, (error, results, fields) => {
+        if (error) {
+            res.write(JSON.stringify(error));
+            res.status(400);
+            res.end();
+            return;
+        }else{
+        res.status(202).end();
+        }
+    });
+});
+
 // Helper function for just responding with an html file.
 let sendFile = file_name => (req, res) => res.sendFile(file_name, {root: ROOT});
 // TODO: Update these to handlebars
