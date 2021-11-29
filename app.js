@@ -182,7 +182,9 @@ app.post('/ingredients_table/insert', (req, res) => {
 });
 
 app.get("/ingredients_table", (req, res) => {
-    pool.query("SELECT * FROM IngredientsTable", (error, results, fields) => {
+    // SELECT FoodItems.name as 'Recipe', FoodItems.name as 'Ingredient', IngredientsTable.quantity as 'Quantity' FROM IngredientsTable JOIN Recipes on 
+    pool.query("Select * from IngredientsTable",
+     (error, results, fields) => {
         if (error) {
             res.write(JSON.stringify(error));
             res.end();

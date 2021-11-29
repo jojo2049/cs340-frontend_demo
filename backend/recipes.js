@@ -77,7 +77,7 @@ function init(app, pool, hb) {
         function success(rows) {
             // Upon success, render the whole HTML page including an updated data table.
             let results_table = {
-                headers: ["recipe_id", "user_id", "food_item_id", "quantity", "prep_time"],
+                headers: ["Recipe ID", "User First Name", "User Last Name", "Food Item Name", "Quantity", "Prep Time"],
                 rows: [...rows]
             };
             let context = {results_table, layout: "query_interface", scripts: ["recipes.js"]};
