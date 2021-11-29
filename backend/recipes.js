@@ -1,89 +1,40 @@
+const { renderPartialHTML, query, renderTableData, extractValues, handler} = require("./common");
+
 function init(app, pool, hb) {
-    // Helper function to render partial HTML fragments.
-    // Returns a promise.
-    function renderPartialHTML(hb_path, context) {
-        let frag = hb.renderView(hb_path, context);
-        return frag;
+    const recipesInsertKeys = ["user_id", "food_item_id", "quantity", "prep_time"];
+    const recipesInsertSQL = "INSERT INTO Recipes (user_id, food_item_id, quantity, prep_time) VALUES (?, ?, ?, ?);";
+    function recipesInsertSuccess(res, results) {
+        query(pool, "SELECT * FROM Recipes", [])
+        .then(rows => renderTableData(hb, rows, recipesInsertKeys, text => res.send(text)));
     }
 
-    // Helper function for querying database.
-    function query(sql, values, cbSuccess, cbFailure) {
-        pool.query(sql, values, (error, results, fields) => {
-            if (error) {
-                cbFailure(error);
-            }
-            else {
-                cbSuccess(results);
-            }
-        });
+    function logError(res, error) {
+        console.log("Error: ");
+        console.log(error);
+        res.json(error);
     }
 
-    // Helper function for creating a newly rendered table fragment.
-    function renderTableData(rows, callback) {
-        let results_table = {
-            headers: ["recipe_id", "user_id", "food_item_id", "quantity", "prep_time"],
-            rows: [...rows]
-        };
-        let context = {results_table, layout: false};
-        renderPartialHTML("views/partials/results_table.handlebars", context)
-        .then(callback);
+    const recipesInsertHandler = handler(pool, recipesInsertKeys, recipesInsertSQL, recipesInsertSuccess, logError);
+    app.post("/recipes/insert", recipesInsertHandler);
+    
+
+    let recipesSelectGenreSQL = "SELECT Recipes.* FROM Recipes JOIN GenresTable ON GenresTable.genre_id = ? AND GenresTable.food_item_id = Recipes.food_item_id;";
+    function recipesSelectGenreSuccess(res, results) {
+        renderTableData(hb, results, recipesInsertKeys, text => res.send(text));
     }
+    const recipesSelectByGenreHandler = handler(pool, ["genre_id"], recipesSelectGenreSQL, recipesSelectGenreSuccess, logError);
+    app.post("/recipes/select/genre", recipesSelectByGenreHandler);
 
-    // Helper function, returns a list of values gathered from data.
-    function extractValues(data, keys) {
-        let values = [];
-        for (let key of keys) {
-            values.push(data[key]);
-        }
-        return values;
+
+    function recipesGetSuccess(res, rows) {
+        let headers = recipesInsertKeys;
+        let context = { results_table: {headers, rows}, layout: "query_interface", scripts: ["recipes.js"] }
+        renderPartialHTML(hb, "views/recipes.handlebars", context)
+        .then(html => res.send(html));
     }
+    const recipesGetHandler = handler(pool, [], "SELECT * FROM Recipes", recipesGetSuccess, logError);
+    app.get("/recipes", recipesGetHandler);
 
-    // Helper function, given a response object it returns a function.
-    function failure(res) {
-        return (error) => {
-            console.log("Error:");
-            console.log(error);
-            res.json(error);
-        }
-    }
-
-    app.post("/recipes/insert", (req, res) => {
-        let sql = "INSERT INTO Recipes (user_id, food_item_id, quantity, prep_time) VALUES (?, ?, ?, ?);"
-        let values = extractValues(req.body, ["user_id", "food_item_id", "quantity", "prep_time"])
-        query(sql, values, success, failure(res));
-
-        function success(result) {
-            // Upon success, get the most up to date table data and render it.
-            query("SELECT * FROM Recipes", [], rows => renderTableData(rows, text => res.send(text)), failure(res));
-        }
-    });
-
-    app.post("/recipes/select/genre", (req, res) => {
-        let sql = "SELECT Recipes.* FROM Recipes JOIN GenresTable ON GenresTable.genre_id = ? AND GenresTable.food_item_id = Recipes.food_item_id;"
-        let values = extractValues(req.body, ["genre_id"]);
-        query(sql, values, success, failure(res));
-
-        function success(rows) {
-            // Upon success, render a table with the retrieved rows.
-            renderTableData(rows, text => res.send(text));
-        }
-    });
-
-    app.get("/recipes", (req, res) => {
-        let sql = "SELECT * FROM Recipes";
-        query(sql, [], success, failure(res));
-
-        function success(rows) {
-            // Upon success, render the whole HTML page including an updated data table.
-            let results_table = {
-                headers: ["recipe_id", "user_id", "food_item_id", "quantity", "prep_time"],
-                rows: [...rows]
-            };
-            let context = {results_table, layout: "query_interface", scripts: ["recipes.js"]};
-            renderPartialHTML("views/recipes.handlebars", context)
-            .then(html => res.send(html));
-        }
-    });
 
     console.log("Successfully init recipes.js");
 }
