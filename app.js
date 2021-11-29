@@ -1,8 +1,11 @@
 // == SETUP
 const path = require("path");
 const express = require("express");
-// defaultLayout corresponds to main.handlebars.
-const handlebars = require("express-handlebars").create({defaultLayout: "default"});
+const handlebars = require("express-handlebars").create(
+    { layoutsDir: "views/layouts"
+    , defaultLayout: "default"
+    }
+);
 // The { pool } syntax is called destructuring.
 // Lets us write:
 //     const { pool } = require("./dbcon");
@@ -30,6 +33,10 @@ app.use("/static", express.static("frontend"));
 
 
 // == ROUTES
+
+// TODO: Do this for all pages
+const recipes = require("./backend/recipes");
+recipes.init(app, pool, handlebars);
 
 app.post('/users/insert', (req, res) => {
     // SQL query.
@@ -102,35 +109,6 @@ app.get("/food_items", (req, res) => {
         context.title = "FoodItems";
         context.scripts = ["food_items.js"];
         res.render("food_items", context);
-    });
-});
-
-
-app.post('/recipes/insert', (req, res) => {
-    let sql = "INSERT INTO Recipes (user_id, food_item_id, quantity, prep_time) VALUES (?, ?, ?, ?);"
-    let values = [req.body["user_id"], req.body["food_item_id"], req.body["quantity"], req.body["prep_time"]];
-    pool.query(sql, values, (error, results, fields) => {
-        if (error) {
-            res.write(JSON.stringify(error));
-            res.end();
-            return;
-        }
-        res.json(results.json);
-    });
-});
-
-app.get("/recipes", (req, res) => {
-    pool.query("SELECT * FROM Recipes", (error, results, fields) => {
-        if (error) {
-            res.write(JSON.stringify(error));
-            res.end();
-            return;
-        }
-        let context = {};
-        context.recipes = results;
-        context.title = "Recipes";
-        context.scripts = ["recipes.js"];
-        res.render("recipes", context);
     });
 });
 
