@@ -70,7 +70,8 @@ function init(app, pool, hb) {
     });
 
     app.get("/recipes", (req, res) => {
-        let sql = "SELECT * FROM Recipes";
+        // let sql = "SELECT * FROM Recipes";
+        let sql = "SELECT Recipes.recipe_id as 'Recipe ID', Users.first_name as 'User First Name', Users.last_name as 'User Last Name', FoodItems.name as 'Food Item Name', Recipes.quantity as 'Quantity', Recipes.prep_time as 'Prep Time' FROM Recipes JOIN Users ON Recipes.user_id = Users.user_id JOIN FoodItems on Recipes.food_item_id = FoodItems.food_item_id;"
         query(sql, [], success, failure(res));
 
         function success(rows) {
@@ -84,6 +85,21 @@ function init(app, pool, hb) {
             .then(html => res.send(html));
         }
     });
+
+    // app.delete("/recipes/:recipe_id", (req, res) => {
+    //     let sql = "DELETE FROM Recipes WHERE recipe_id = ?;"
+    //     let values = [req.params.recipe_id
+    //     pool.query(sql, values, (error, results, fields) => {
+    //         if (error) {
+    //             res.write(JSON.stringify(error));
+    //             res.status(400);
+    //             res.end();
+    //             return;
+    //         }else{
+    //         res.status(202).end();
+    //         }
+    //     });
+    // });
 
     console.log("Successfully init recipes.js");
 }

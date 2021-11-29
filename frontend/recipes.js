@@ -31,4 +31,15 @@ function initRecipes() {
     override("#form_recipes_select_genre", "submit", selectRecipesInGenre);
 }
 
+function deleteRecipe(recipe_id){
+    $.ajax({
+      url: '/recipes/' + recipe_id,
+      type: 'DELETE',
+      success: function(result){
+        window.location.reload(true);
+      }
+    })
+  }
+
+
 window.onload = initRecipes;
