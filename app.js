@@ -197,7 +197,7 @@ app.get("/ingredients_table", (req, res) => {
 });
 
 app.delete("/ingredients_table/:recipe_id/:food_item_id", (req, res) => {
-    let sql = "DELETE FROM IngredientsTable WHERE (recipe_id, food_item_id) VALUES (?,?);"
+    let sql = "DELETE FROM IngredientsTable WHERE recipe_id = ? and food_item_id=?;"
     let values = [req.params.recipe_id, req.params.food_item_id]
     pool.query(sql, values, (error, results, fields) => {
         if (error) {

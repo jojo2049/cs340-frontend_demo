@@ -16,7 +16,7 @@ function initIngredientsTable() {
 
 function delete_ingredients_table(recipe_id, food_item_id){
     $.ajax({
-      url: '/ingredients_table/' + recipe_id + food_item_id,
+      url: '/ingredients_table/' + recipe_id + '/' + food_item_id,
       type: 'DELETE',
       success: function(result){
         window.location.reload(true);
