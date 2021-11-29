@@ -15,7 +15,7 @@ The front end is responsible for:
 - Sending data to server
 - Handling server response (update table or display error)
 
-**Requirements:** form id, server route, data keys/values, callback on server response
+**Requirements:** *form id, server route, data keys/values, callback on server response*
 
 ### Backend responsibilities
 The back end is responsible for:
@@ -24,4 +24,4 @@ The back end is responsible for:
 - Querying database
 - Responding to client with HTML fragment or error
 
-**Requirements:** server route, expected data, SQL query, callback for return from database, send result to client
+**Requirements:** *server route, expected data, SQL query, callback for return from database, send result to client*
