@@ -26,9 +26,26 @@ function selectRecipesInGenre(form) {
     });
 }
 
+function deleteRecipe(form){
+  let elements = form.elements;
+  console.log(elements)
+  let recipe_id = elements["recipe_id"].value;
+  let data = { recipe_id };
+  // POST the form data to server.
+  postJSON("recipes/delete", data)
+  .then(res => res.text())
+  .then(text => {
+      replaceInnerHTML("#container_results_table", text);
+  })
+}
+
 function initRecipes() {
     override("#form_recipes_insert", "submit", insertRecipe);
     override("#form_recipes_select_genre", "submit", selectRecipesInGenre);
+    override("#form_recipes_delete", "submit", deleteRecipe);
 }
+
+
+
 
 window.onload = initRecipes;
