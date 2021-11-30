@@ -88,17 +88,13 @@ function init(app, pool, hb) {
 
     // app.delete("/recipes/:recipe_id", (req, res) => {
     //     let sql = "DELETE FROM Recipes WHERE recipe_id = ?;"
-    //     let values = [req.params.recipe_id
-    //     pool.query(sql, values, (error, results, fields) => {
-    //         if (error) {
-    //             res.write(JSON.stringify(error));
-    //             res.status(400);
-    //             res.end();
-    //             return;
-    //         }else{
-    //         res.status(202).end();
-    //         }
-    //     });
+    //     let values = [req.params.recipe_id];
+    //     query(sql, values, success, failure(res));
+
+    //     function success(rows) {
+    //         // Upon success, render a table with the retrieved rows.
+    //         renderTableData(rows, text => res.send(text));
+    //     }
     // });
 
     console.log("Successfully init recipes.js");
