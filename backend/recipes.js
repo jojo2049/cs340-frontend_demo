@@ -8,7 +8,9 @@ function init(app, pool, hb) {
     const recipesSelectSQL = "SELECT Recipes.recipe_id as 'Recipe ID', CONCAT(Users.first_name, ' ', Users.last_name) as 'Creator', FoodItems.name as 'Food Item Name', Recipes.quantity as 'Quantity', Recipes.prep_time as 'Prep Time' FROM Recipes JOIN Users ON Recipes.user_id = Users.user_id JOIN FoodItems on Recipes.food_item_id = FoodItems.food_item_id ORDER BY Recipes.recipe_id;";
     const recipesInsertSQL = "INSERT INTO Recipes (user_id, food_item_id, quantity, prep_time) VALUES (?, ?, ?, ?);";
     const recipesSelectGenreSQL = "SELECT Recipes.* FROM Recipes JOIN GenresTable ON GenresTable.genre_id = ? AND GenresTable.food_item_id = Recipes.food_item_id;";
-    const recipesDeleteSQL = "DELETE FROM Recipes WHERE recipe_id = ?;"
+    const recipesSelectFoodItemSQL = "SELECT * FROM Recipes WHERE food_item_id = ?;";
+    const recipesSelectUserSQL = "SELECT * FROM Recipes WHERE user_id = ?;";
+    const recipesDeleteSQL = "DELETE FROM Recipes WHERE recipe_id = ?;";
     
     //== INSERT
     const recipesInsertSuccess = (res, results) => query(recipesSelectSQL, [])
@@ -20,6 +22,16 @@ function init(app, pool, hb) {
     const recipesSelectGenreSuccess = (res, results) => renderTableData(results, recipesHeaders, text => res.send(text));
     const recipesSelectGenreHandler = handler(["genre_id"], recipesSelectGenreSQL, recipesSelectGenreSuccess, logError);
     app.post("/recipes/select/genre", recipesSelectGenreHandler);
+
+    //== SELECT BY FOODITEM
+    const recipesSelectFoodItemSuccess = (res, results) => renderTableData(results, recipesHeaders, text => res.send(text));
+    const recipesSelectFoodItemHandler = handler(["food_item_id"], recipesSelectFoodItemSQL, recipesSelectFoodItemSuccess, logError);
+    app.post("/recipes/select/food_item", recipesSelectFoodItemHandler);
+
+    //== SELECT BY USER
+    const recipesSelectUserSuccess = (res, results) => renderTableData(results, recipesHeaders, text => res.send(text));
+    const recipesSelectUserHandler = handler(["user_id"], recipesSelectUserSQL, recipesSelectUserSuccess, logError);
+    app.post("/recipes/select/user", recipesSelectUserHandler);
 
     //== DELETE
     const recipesDeleteSuccess = (res, results) => query(recipesSelectSQL, [])
