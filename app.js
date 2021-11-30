@@ -38,6 +38,9 @@ app.use("/static", express.static("frontend"));
 const recipes = require("./backend/recipes");
 recipes.init(app, pool, handlebars);
 
+const genres_table = require("./backend/genres_table");
+genres_table.init(app, pool, handlebars);
+
 app.post('/users/insert', (req, res) => {
     // SQL query.
     // The '?' will be replaced, in order, with the values in the list passed to pool.query.
@@ -140,33 +143,33 @@ app.get("/genres", (req, res) => {
     });
 });
 
-app.post('/genres_table/insert', (req, res) => {
-    let sql = "INSERT INTO GenresTable (genre_id, food_item_id) VALUES (?, ?);"
-    let values = [req.body["genre_id"], req.body["food_item_id"]];
-    pool.query(sql, values, (error, results, fields) => {
-        if (error) {
-            res.write(JSON.stringify(error));
-            res.end();
-            return;
-        }
-        res.json(results.json);
-    });
-});
+// app.post('/genres_table/insert', (req, res) => {
+//     let sql = "INSERT INTO GenresTable (genre_id, food_item_id) VALUES (?, ?);"
+//     let values = [req.body["genre_id"], req.body["food_item_id"]];
+//     pool.query(sql, values, (error, results, fields) => {
+//         if (error) {
+//             res.write(JSON.stringify(error));
+//             res.end();
+//             return;
+//         }
+//         res.json(results.json);
+//     });
+// });
 
-app.get("/genres_table", (req, res) => {
-    pool.query("SELECT Genres.name as 'Genre Name', FoodItems.name as 'FoodItem Name' FROM GenresTable JOIN Genres ON GenresTable.genre_id = Genres.genre_id JOIN FoodItems ON GenresTable.food_item_id = FoodItems.food_item_id;", (error, results, fields) => {
-        if (error) {
-            res.write(JSON.stringify(error));
-            res.end();
-            return;
-        }
-        let context = {};
-        context.genres_table = results;
-        context.title = "GenresTable";
-        context.scripts = ["genres_table.js"];
-        res.render("genres_table", context);
-    });
-});
+// app.get("/genres_table", (req, res) => {
+//     pool.query("SELECT Genres.name as 'Genre Name', FoodItems.name as 'FoodItem Name' FROM GenresTable JOIN Genres ON GenresTable.genre_id = Genres.genre_id JOIN FoodItems ON GenresTable.food_item_id = FoodItems.food_item_id;", (error, results, fields) => {
+//         if (error) {
+//             res.write(JSON.stringify(error));
+//             res.end();
+//             return;
+//         }
+//         let context = {};
+//         context.genres_table = results;
+//         context.title = "GenresTable";
+//         context.scripts = ["genres_table.js"];
+//         res.render("genres_table", context);
+//     });
+// });
 
 app.post('/ingredients_table/insert', (req, res) => {
     let sql = "INSERT INTO IngredientsTable (recipe_id, food_item_id, quantity) VALUES (?, ?, ?);"

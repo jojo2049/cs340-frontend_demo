@@ -71,13 +71,13 @@ function init(app, pool, hb) {
 
     app.get("/recipes", (req, res) => {
         // let sql = "SELECT * FROM Recipes";
-        let sql = "SELECT Recipes.recipe_id as 'Recipe ID', Users.first_name as 'User First Name', Users.last_name as 'User Last Name', FoodItems.name as 'Food Item Name', Recipes.quantity as 'Quantity', Recipes.prep_time as 'Prep Time' FROM Recipes JOIN Users ON Recipes.user_id = Users.user_id JOIN FoodItems on Recipes.food_item_id = FoodItems.food_item_id;"
+        let sql = "SELECT Recipes.recipe_id as 'Recipe ID', CONCAT(Users.first_name, ' ', Users.last_name) as 'Creator', FoodItems.name as 'Food Item Name', Recipes.quantity as 'Quantity', Recipes.prep_time as 'Prep Time' FROM Recipes JOIN Users ON Recipes.user_id = Users.user_id JOIN FoodItems on Recipes.food_item_id = FoodItems.food_item_id;"
         query(sql, [], success, failure(res));
 
         function success(rows) {
             // Upon success, render the whole HTML page including an updated data table.
             let results_table = {
-                headers: ["Recipe ID", "User First Name", "User Last Name", "Food Item Name", "Quantity", "Prep Time"],
+                headers: ["Recipe ID", "Creator", "Food Item Name", "Quantity", "Prep Time"],
                 rows: [...rows]
             };
             let context = {results_table, layout: "query_interface", scripts: ["recipes.js"]};
