@@ -16,16 +16,16 @@
 
 <div class="container">
     <h3>Delete FoodItem from Recipe</h3>
-    <form>
+    <form id="form_ingredients_table_delete">
         <label for="recipe_id">Recipe ID:</label>
-        <input type="text"><br>
+        <input type="text" name="recipe_id"><br>
         <label for="food_item_id">FoodItem ID:</label>
-        <input type="text"><br>
+        <input type="text" name="food_item_id"><br>
         <input type="submit" value="DELETE FoodItem from Recipe">
     </form>
 </div>
 
-<div class="container">
+{{!-- <div class="container">
     <h3>IngredientsTable Data</h3>
     <table>
         <tr>
@@ -39,9 +39,8 @@
             <td>{{recipe_id}}</td>
             <td>{{food_item_id}}</td>
             <td>{{quantity}}</td>
-            <td><button onclick="delete_ingredients_table({{recipe_id}}, {{food_item_id}})">Delete</button></td>
         </tr>
         {{/with}}
         {{/each}}
     </table>
-</div>
+</div> --}}

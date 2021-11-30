@@ -41,6 +41,9 @@ recipes.init(app, pool, handlebars);
 const genres_table = require("./backend/genres_table");
 genres_table.init(app, pool, handlebars);
 
+const ingredients_table = require("./backend/ingredients_table");
+ingredients_table.init(app, pool, handlebars);
+
 app.post('/users/insert', (req, res) => {
     // SQL query.
     // The '?' will be replaced, in order, with the values in the list passed to pool.query.
@@ -171,50 +174,49 @@ app.get("/genres", (req, res) => {
 //     });
 // });
 
-app.post('/ingredients_table/insert', (req, res) => {
-    let sql = "INSERT INTO IngredientsTable (recipe_id, food_item_id, quantity) VALUES (?, ?, ?);"
-    let values = [req.body["recipe_id"], req.body["food_item_id"], req.body["quantity"]];
-    pool.query(sql, values, (error, results, fields) => {
-        if (error) {
-            res.write(JSON.stringify(error));
-            res.end();
-            return;
-        }
-        res.json(results.json);
-    });
-});
+// app.post('/ingredients_table/insert', (req, res) => {
+//     let sql = "INSERT INTO IngredientsTable (recipe_id, food_item_id, quantity) VALUES (?, ?, ?);"
+//     let values = [req.body["recipe_id"], req.body["food_item_id"], req.body["quantity"]];
+//     pool.query(sql, values, (error, results, fields) => {
+//         if (error) {
+//             res.write(JSON.stringify(error));
+//             res.end();
+//             return;
+//         }
+//         res.json(results.json);
+//     });
+// });
 
-app.get("/ingredients_table", (req, res) => {
-    // SELECT IngredientsTable.recipe_id as 'Recipe ID', FoodItems.name as 'Recipe Name' WHERE IngredientsTable.recipe_id = Recipes.recipe_id AND Recipes.food_item_id = FoodItems.food_item_id, FoodItems.name as 'Ingredient' WHERE IngredientsTable.food_item_id = FoodItems.food_item_id, IngredientsTable.quantity as 'Quantity' FROM IngredientsTable JOIN Recipes on IngredientsTable.recipe_id = Recipes.recipe_id JOIN FoodItems on IngredientsTable.food_item_id = FoodItems.food_item_id;
-    pool.query("Select * from IngredientsTable",
-     (error, results, fields) => {
-        if (error) {
-            res.write(JSON.stringify(error));
-            res.end();
-            return;
-        }
-        let context = {};
-        context.ingredients_table = results;
-        context.title = "IngredientsTable";
-        context.scripts = ["ingredients_table.js"];
-        res.render("ingredients_table", context);
-    });
-});
+// app.get("/ingredients_table", (req, res) => {
+//     pool.query("SELECT A.recipe_ID, A.food_item_id, C.name, A.quantity FROM IngredientsTable A JOIN Recipes B ON A.recipe_id = B.recipe_id JOIN FoodItems C ON A.food_item_id = C.food_item_id;",
+//      (error, results, fields) => {
+//         if (error) {
+//             res.write(JSON.stringify(error));
+//             res.end();
+//             return;
+//         }
+//         let context = {};
+//         context.ingredients_table = results;
+//         context.title = "IngredientsTable";
+//         context.scripts = ["ingredients_table.js"];
+//         res.render("ingredients_table", context);
+//     });
+// });
 
-app.post("/ingredients_table/:recipe_id/:food_item_id", (req, res) => {
-    let sql = "DELETE FROM IngredientsTable WHERE recipe_id = ? and food_item_id=?;"
-    let values = [req.params.recipe_id, req.params.food_item_id]
-    pool.query(sql, values, (error, results, fields) => {
-        if (error) {
-            res.write(JSON.stringify(error));
-            res.status(400);
-            res.end();
-            return;
-        }else{
-        res.status(202).end();
-        }
-    });
-});
+// app.post("/ingredients_table/delete", (req, res) => {
+//     let sql = "DELETE FROM IngredientsTable WHERE recipe_id = ? and food_item_id=?;"
+//     let values = [req.body["recipe_id"], req.body["food_item_id"]];
+//     pool.query(sql, values, (error, results, fields) => {
+//         if (error) {
+//             res.write(JSON.stringify(error));
+//             res.status(400);
+//             res.end();
+//             return;
+//         }else{
+//         res.status(202).end();
+//         }
+//     });
+// });
 
 // Helper function for just responding with an html file.
 let sendFile = file_name => (req, res) => res.sendFile(file_name, {root: ROOT});
