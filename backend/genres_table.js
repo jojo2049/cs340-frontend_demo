@@ -54,13 +54,13 @@ function init(app, pool, hb) {
 
       function success(result) {
           // Upon success, get the most up to date table data and render it.
-          query("SELECT Genres.name as 'Genre Name', FoodItems.name as 'FoodItem Name' FROM GenresTable JOIN Genres ON GenresTable.genre_id = Genres.genre_id JOIN FoodItems ON GenresTable.food_item_id = FoodItems.food_item_id;", [], rows => renderTableData(rows, text => res.send(text)), failure(res));
+          query("SELECT Genres.name as 'Genre Name', FoodItems.name as 'FoodItem Name' FROM GenresTable JOIN Genres ON GenresTable.genre_id = Genres.genre_id JOIN FoodItems ON GenresTable.food_item_id = FoodItems.food_item_id ORDER By Genres.name;", [], rows => renderTableData(rows, text => res.send(text)), failure(res));
       }
   });
 
 
   app.get("/genres_table", (req, res) => {
-      let sql = "SELECT Genres.name as 'Genre Name', FoodItems.name as 'FoodItem Name' FROM GenresTable JOIN Genres ON GenresTable.genre_id = Genres.genre_id JOIN FoodItems ON GenresTable.food_item_id = FoodItems.food_item_id;"
+      let sql = "SELECT Genres.name as 'Genre Name', FoodItems.name as 'FoodItem Name' FROM GenresTable JOIN Genres ON GenresTable.genre_id = Genres.genre_id JOIN FoodItems ON GenresTable.food_item_id = FoodItems.food_item_id ORDER By Genres.name;"
       query(sql, [], success, failure(res));
 
       function success(rows) {

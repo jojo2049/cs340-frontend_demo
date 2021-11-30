@@ -185,7 +185,7 @@ app.post('/ingredients_table/insert', (req, res) => {
 });
 
 app.get("/ingredients_table", (req, res) => {
-    // SELECT FoodItems.name as 'Recipe', FoodItems.name as 'Ingredient', IngredientsTable.quantity as 'Quantity' FROM IngredientsTable JOIN Recipes on 
+    // SELECT IngredientsTable.recipe_id as 'Recipe ID', FoodItems.name as 'Recipe Name' WHERE IngredientsTable.recipe_id = Recipes.recipe_id AND Recipes.food_item_id = FoodItems.food_item_id, FoodItems.name as 'Ingredient' WHERE IngredientsTable.food_item_id = FoodItems.food_item_id, IngredientsTable.quantity as 'Quantity' FROM IngredientsTable JOIN Recipes on IngredientsTable.recipe_id = Recipes.recipe_id JOIN FoodItems on IngredientsTable.food_item_id = FoodItems.food_item_id;
     pool.query("Select * from IngredientsTable",
      (error, results, fields) => {
         if (error) {
@@ -201,7 +201,7 @@ app.get("/ingredients_table", (req, res) => {
     });
 });
 
-app.delete("/ingredients_table/:recipe_id/:food_item_id", (req, res) => {
+app.post("/ingredients_table/:recipe_id/:food_item_id", (req, res) => {
     let sql = "DELETE FROM IngredientsTable WHERE recipe_id = ? and food_item_id=?;"
     let values = [req.params.recipe_id, req.params.food_item_id]
     pool.query(sql, values, (error, results, fields) => {
