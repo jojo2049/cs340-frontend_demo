@@ -154,7 +154,7 @@ app.post('/genres_table/insert', (req, res) => {
 });
 
 app.get("/genres_table", (req, res) => {
-    pool.query("SELECT * FROM GenresTable", (error, results, fields) => {
+    pool.query("SELECT Genres.name as 'Genre Name', FoodItems.name as 'FoodItem Name' FROM GenresTable JOIN Genres ON GenresTable.genre_id = Genres.genre_id JOIN FoodItems ON GenresTable.food_item_id = FoodItems.food_item_id;", (error, results, fields) => {
         if (error) {
             res.write(JSON.stringify(error));
             res.end();
