@@ -1,3 +1,10 @@
+// Replaces the inner HTML of the selected element.
+function replaceInnerHTML(selector, html) {
+    let elem = document.querySelector(selector);
+    elem.innerHTML = html;
+}
+
+// Replaces an elements event handling.
 function override(selector, event, callback) {
     let elem = document.querySelector(selector);
     if (elem) {
@@ -9,9 +16,9 @@ function override(selector, event, callback) {
     }
 }
 
+// Send an HTTP POST request to route with the given data.
+// Returns a Promise containing a response, can call .then(response => ...).
 function postJSON(route, data) {
-    // Send an HTTP POST request
-    // Returns a Promise, can call .then(data => ...).
     return fetch(route, {
         method: "POST",
         // Specify we are sending JSON data.

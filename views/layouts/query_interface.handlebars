@@ -7,7 +7,6 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>{{title}}</title>
 
-        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
         <script src="/static/common.js" defer></script>
         {{#each scripts}}
         <script src="/static/{{this}}" defer></script>
@@ -26,5 +25,25 @@
         </div>
         
         {{{body}}}
+
+        <div id="container_results_table" class="container">
+            <h3>{{title}} Data</h3>
+            <table>
+                {{#with results_table}}
+                <tr>
+                    {{#each headers}}
+                    <th>{{this}}</th>
+                    {{/each}}
+                </tr>
+                {{#each rows}}
+                <tr>
+                    {{#each this}}
+                    <td>{{this}}</td>
+                    {{/each}}
+                </tr>
+                {{/each}}
+                {{/with}}
+            </table>
+        </div>
     </body>
 </html>
