@@ -1,81 +1,40 @@
 function init(app, pool, hb) {
-  // Helper function to render partial HTML fragments.
-  // Returns a promise.
-  function renderPartialHTML(hb_path, context) {
-      let frag = hb.renderView(hb_path, context);
-      return frag;
-  }
+    //== Initialize helper functions.
+    const { renderPartialHTML, query, renderTableData, handler} = require("./common").init(pool, hb);
 
-  // Helper function for querying database.
-  function query(sql, values, cbSuccess, cbFailure) {
-      pool.query(sql, values, (error, results, fields) => {
-          if (error) {
-              cbFailure(error);
-          }
-          else {
-              cbSuccess(results);
-          }
-      });
-  }
+    //=Constants
+    const genres_tableKeys = [ "genre_id", "food_item_id" ];
+    const genres_tableHeaders = [ "Genre", "Food Item" ];
+    const genres_tableSelectSQL = "SELECT Genres.name as 'Genre Name', FoodItems.name as 'FoodItem Name' FROM GenresTable JOIN Genres ON GenresTable.genre_id = Genres.genre_id JOIN FoodItems ON GenresTable.food_item_id = FoodItems.food_item_id ORDER By Genres.name;";
+    const genres_tableInsertSQL= "INSERT INTO GenresTable (genre_id, food_item_id) VALUES (?, ?);";
 
-  // Helper function for creating a newly rendered table fragment.
-  function renderTableData(rows, callback) {
-      let results_table = {
-          headers: ["Genre", "FoodItem"],
-          rows: [...rows]
-      };
-      let context = {results_table, layout: false};
-      renderPartialHTML("views/partials/results_table.handlebars", context)
-      .then(callback);
-  }
+    //== INSERT
+    const genres_tableInsertSuccess = (res, results) => query(genres_tableSelectSQL, [])
+        .then(rows => renderTableData(rows, genres_tableHeaders, text => res.send(text)));
+    const genres_tableInsertHandler = handler(genres_tableKeys, genres_tableInsertSQL, genres_tableInsertSuccess, logError);
+    app.post("/genres_table/insert", genres_tableInsertHandler);
 
-  // Helper function, returns a list of values gathered from data.
-  function extractValues(data, keys) {
-      let values = [];
-      for (let key of keys) {
-          values.push(data[key]);
-      }
-      return values;
-  }
+    //== GET
+    const genres_tableGetSuccess = (res, rows) => {
+        let context = {
+            results_table: {headers: genres_tableHeaders, rows},
+            scripts: ["genres_table.js"],
+            layout: "query_interface"
+        };
+        renderPartialHTML("views/genres_table.handlebars", context)
+        .then(html => res.send(html));
+    }
+    const genres_tableGetHandler = handler([], genres_tableSelectSQL, genres_tableGetSuccess, logError);
+    app.get("/genres_table", genres_tableGetHandler);
 
-  // Helper function, given a response object it returns a function.
-  function failure(res) {
-      return (error) => {
-          console.log("Error:");
-          console.log(error);
-          res.json(error);
-      }
-  }
+    //== Helper
+    function logError(res, error) {
+        console.log("Error: ");
+        console.log(error);
+        res.json(error);
+    }
 
-  app.post("/genres_table/insert", (req, res) => {
-      let sql = "INSERT INTO GenresTable (genre_id, food_item_id) VALUES (?, ?);"
-      let values = [req.body["genre_id"], req.body["food_item_id"]];
-      query(sql, values, success, failure(res));
-
-      function success(result) {
-          // Upon success, get the most up to date table data and render it.
-          query("SELECT Genres.name as 'Genre Name', FoodItems.name as 'FoodItem Name' FROM GenresTable JOIN Genres ON GenresTable.genre_id = Genres.genre_id JOIN FoodItems ON GenresTable.food_item_id = FoodItems.food_item_id ORDER By Genres.name;", [], rows => renderTableData(rows, text => res.send(text)), failure(res));
-      }
-  });
-
-
-  app.get("/genres_table", (req, res) => {
-      let sql = "SELECT Genres.name as 'Genre Name', FoodItems.name as 'FoodItem Name' FROM GenresTable JOIN Genres ON GenresTable.genre_id = Genres.genre_id JOIN FoodItems ON GenresTable.food_item_id = FoodItems.food_item_id ORDER By Genres.name;"
-      query(sql, [], success, failure(res));
-
-      function success(rows) {
-          // Upon success, render the whole HTML page including an updated data table.
-          let results_table = {
-            headers: ["Genre", "FoodItem"],
-              rows: [...rows]
-          };
-          let context = {results_table, layout: "query_interface", scripts: ["genres_table.js"]};
-          renderPartialHTML("views/genres_table.handlebars", context)
-          .then(html => res.send(html));
-      }
-  });
-
-  console.log("Successfully init genres_table.js");
+    console.log("Successfully init genres_table.js");
 }
 
-module.exports.init = init;
+module.exports.init = init
