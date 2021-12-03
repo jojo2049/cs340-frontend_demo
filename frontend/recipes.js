@@ -26,8 +26,6 @@ function selectRecipesInGenre(form) {
     });
 }
 
-<<<<<<< HEAD
-=======
 function selectRecipesByFoodItem(form) {
     let elements = form.elements;
     console.log(elements)
@@ -54,7 +52,6 @@ function selectRecipesByUser(form) {
     });
 }
 
->>>>>>> master
 function deleteRecipe(form){
   let elements = form.elements;
   console.log(elements)

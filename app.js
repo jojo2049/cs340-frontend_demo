@@ -44,6 +44,9 @@ genres_table.init(app, pool, handlebars);
 const ingredients_table = require("./backend/ingredients_table");
 ingredients_table.init(app, pool, handlebars);
 
+const genres = require("./backend/genres");
+genres.init(app, pool, handlebars);
+
 app.post('/users/insert', (req, res) => {
     // SQL query.
     // The '?' will be replaced, in order, with the values in the list passed to pool.query.
@@ -118,33 +121,33 @@ app.get("/food_items", (req, res) => {
     });
 });
 
-app.post('/genres/insert', (req, res) => {
-    let sql = "INSERT INTO Genres (name) VALUES (?);"
-    let values = [req.body["name"]];
-    pool.query(sql, values, (error, results, fields) => {
-        if (error) {
-            res.write(JSON.stringify(error));
-            res.end();
-            return;
-        }
-        res.json(results.json);
-    });
-});
+// app.post('/genres/insert', (req, res) => {
+//     let sql = "INSERT INTO Genres (name) VALUES (?);"
+//     let values = [req.body["name"]];
+//     pool.query(sql, values, (error, results, fields) => {
+//         if (error) {
+//             res.write(JSON.stringify(error));
+//             res.end();
+//             return;
+//         }
+//         res.json(results.json);
+//     });
+// });
 
-app.get("/genres", (req, res) => {
-    pool.query("SELECT * FROM Genres", (error, results, fields) => {
-        if (error) {
-            res.write(JSON.stringify(error));
-            res.end();
-            return;
-        }
-        let context = {};
-        context.genres = results;
-        context.title = "Genres";
-        context.scripts = ["genres.js"];
-        res.render("genres", context);
-    });
-});
+// app.get("/genres", (req, res) => {
+//     pool.query("SELECT * FROM Genres", (error, results, fields) => {
+//         if (error) {
+//             res.write(JSON.stringify(error));
+//             res.end();
+//             return;
+//         }
+//         let context = {};
+//         context.genres = results;
+//         context.title = "Genres";
+//         context.scripts = ["genres.js"];
+//         res.render("genres", context);
+//     });
+// });
 
 // app.post('/genres_table/insert', (req, res) => {
 //     let sql = "INSERT INTO GenresTable (genre_id, food_item_id) VALUES (?, ?);"
