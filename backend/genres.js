@@ -38,32 +38,3 @@ function init(app, pool, hb) {
 }
 
 module.exports.init = init
-
-
-// app.get("/genres", (req, res) => {
-//     pool.query("SELECT * FROM Genres", (error, results, fields) => {
-//         if (error) {
-//             res.write(JSON.stringify(error));
-//             res.end();
-//             return;
-//         }
-//         let context = {};
-//         context.genres = results;
-//         context.title = "Genres";
-//         context.scripts = ["genres.js"];
-//         res.render("genres", context);
-//     });
-// });
-
-// app.post('/genres/insert', (req, res) => {
-//     let sql = "INSERT INTO Genres (name) VALUES (?);"
-//     let values = [req.body["name"]];
-//     pool.query(sql, values, (error, results, fields) => {
-//         if (error) {
-//             res.write(JSON.stringify(error));
-//             res.end();
-//             return;
-//         }
-//         res.json(results.json);
-//     });
-// });

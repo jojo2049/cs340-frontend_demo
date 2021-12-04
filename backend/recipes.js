@@ -59,56 +59,6 @@ function init(app, pool, hb) {
         res.json(error);
     }
 
-    // app.post("/recipes/insert", (req, res) => {
-    //     let sql = "INSERT INTO Recipes (user_id, food_item_id, quantity, prep_time) VALUES (?, ?, ?, ?);"
-    //     let values = extractValues(req.body, ["user_id", "food_item_id", "quantity", "prep_time"])
-    //     query(sql, values, success, failure(res));
-
-    //     function success(result) {
-    //         // Upon success, get the most up to date table data and render it.
-    //         query("SELECT * FROM Recipes", [], rows => renderTableData(rows, text => res.send(text)), failure(res));
-    //     }
-    // });
-
-    // app.post("/recipes/select/genre", (req, res) => {
-    //     let sql = "SELECT Recipes.* FROM Recipes JOIN GenresTable ON GenresTable.genre_id = ? AND GenresTable.food_item_id = Recipes.food_item_id;"
-    //     let values = extractValues(req.body, ["genre_id"]);
-    //     query(sql, values, success, failure(res));
-
-    //     function success(rows) {
-    //         // Upon success, render a table with the retrieved rows.
-    //         renderTableData(rows, text => res.send(text));
-    //     }
-    // });
-
-    // app.get("/recipes", (req, res) => {
-    //     // let sql = "SELECT * FROM Recipes";
-    //     let sql = "SELECT Recipes.recipe_id as 'Recipe ID', CONCAT(Users.first_name, ' ', Users.last_name) as 'Creator', FoodItems.name as 'Food Item Name', Recipes.quantity as 'Quantity', Recipes.prep_time as 'Prep Time' FROM Recipes JOIN Users ON Recipes.user_id = Users.user_id JOIN FoodItems on Recipes.food_item_id = FoodItems.food_item_id;"
-    //     query(sql, [], success, failure(res));
-
-    //     function success(rows) {
-    //         // Upon success, render the whole HTML page including an updated data table.
-    //         let results_table = {
-    //             headers: ["Recipe ID", "Creator", "Food Item Name", "Quantity", "Prep Time"],
-    //             rows: [...rows]
-    //         };
-    //         let context = {results_table, layout: "query_interface", scripts: ["recipes.js"]};
-    //         renderPartialHTML("views/recipes.handlebars", context)
-    //         .then(html => res.send(html));
-    //     }
-    // });
-
-    // app.delete("/recipes/:recipe_id", (req, res) => {
-    //     let sql = "DELETE FROM Recipes WHERE recipe_id = ?;"
-    //     let values = [req.params.recipe_id];
-    //     query(sql, values, success, failure(res));
-
-    //     function success(rows) {
-    //         // Upon success, render a table with the retrieved rows.
-    //         renderTableData(rows, text => res.send(text));
-    //     }
-    // });
-
     console.log("Successfully init recipes.js");
 }
 
