@@ -7,6 +7,8 @@ function init(app, pool, hb) {
     const genres_tableHeaders = [ "Genre", "Food Item" ];
     const genres_tableSelectSQL = "SELECT Genres.name as 'Genre Name', FoodItems.name as 'FoodItem Name' FROM GenresTable JOIN Genres ON GenresTable.genre_id = Genres.genre_id JOIN FoodItems ON GenresTable.food_item_id = FoodItems.food_item_id ORDER By Genres.name;";
     const genres_tableInsertSQL= "INSERT INTO GenresTable (genre_id, food_item_id) VALUES (?, ?);";
+    const genres_genreidname = "SELECT genre_id, name from Genres;";
+    const genres_fooditemidname = "SELECT food_item_id, name from FoodItems;";
 
     //== INSERT
     const genres_tableInsertSuccess = (res, results) => query(genres_tableSelectSQL, [])

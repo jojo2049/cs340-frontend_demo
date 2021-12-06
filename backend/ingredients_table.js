@@ -8,6 +8,8 @@ function init(app, pool, hb) {
     const ingredients_tableSelectSQL = "SELECT A.recipe_ID, A.food_item_id, C.name, A.quantity FROM IngredientsTable A JOIN Recipes B ON A.recipe_id = B.recipe_id JOIN FoodItems C ON A.food_item_id = C.food_item_id;";
     const ingredients_tableInsertSQL= "INSERT INTO IngredientsTable (recipe_id, food_item_id, quantity) VALUES (?, ?, ?);";
     const ingredients_tableDeleteSQL = "DELETE FROM IngredientsTable WHERE recipe_id = ? and food_item_id=?;";
+    const ingredients_fooditemidname = "SELECT food_item_id, name FROM FoodItems;"
+    const ingredients_recipeidname = "SELECT Recipes.recipe_id, FoodItems.name FROM Recipes JOIN Users ON Recipes.user_id = Users.user_id JOIN FoodItems on Recipes.food_item_id = FoodItems.food_item_id ORDER BY Recipes.recipe_id;"
 
     //== INSERT
     const ingredients_tableInsertSuccess = (res, results) => query(ingredients_tableSelectSQL, [])

@@ -11,8 +11,17 @@ function init(app, pool, hb) {
     const recipesSelectFoodItemSQL = "SELECT * FROM Recipes WHERE food_item_id = ?;";
     const recipesSelectUserSQL = "SELECT * FROM Recipes WHERE user_id = ?;";
     const recipesDeleteSQL = "DELETE FROM Recipes WHERE recipe_id = ?;";
-    const recipesDeletelist = "SELECT Recipes.recipe_id as 'Recipe ID', FoodItems.name as 'Recipe Name' FROM Recipes JOIN Users ON Recipes.user_id = Users.user_id JOIN FoodItems on Recipes.food_item_id = FoodItems.food_item_id ORDER BY Recipes.recipe_id;";
-    const recipesSelectGenreslist = "SELECT genre_id, name FROM Genres;";
+    const recipesUpdateSQL = "UPDATE Recipes SET (user_id, food_item_id, quantity, prep_time) VALUES (?, ?, ?, ?) WHERE recipe_id = ?;"
+    const recipes_recipeidname = "SELECT Recipes.recipe_id, FoodItems.name FROM Recipes JOIN Users ON Recipes.user_id = Users.user_id JOIN FoodItems on Recipes.food_item_id = FoodItems.food_item_id ORDER BY Recipes.recipe_id;";
+    const recipes_genresidname = "SELECT genre_id, name from Genres;";
+    const recipes_fooditemidname = "SELECT food_item_id, name from FoodItems;";
+    const recipes_useridname = "SELECT Users.user_id, CONCAT(Users.first_name, ' ', Users.last_name) FROM Users;"
+
+    // These are queries to return names for rows that exist in the table. Ignore for now.
+    // const recipes_recipeidname = "SELECT Recipes.recipe_id, FoodItems.name FROM Recipes JOIN Users ON Recipes.user_id = Users.user_id JOIN FoodItems on Recipes.food_item_id = FoodItems.food_item_id ORDER BY Recipes.recipe_id;";
+    // const recipes_genresidname = "SELECT DISTINCT Genres.genre_id, Genres.name FROM Recipes JOIN FoodItems on Recipes.food_item_id = FoodItems.food_item_id JOIN GenresTable on FoodItems.food_item_id = GenresTable.food_item_id JOIN Genres on GenresTable.genre_id = Genres.genre_id;";
+    // const recipes_fooditemidname = "SELECT DISTINCT FoodItems.food_item_id, FoodItems.name FROM Recipes JOIN FoodItems on Recipes.food_item_id = FoodItems.food_item_id JOIN GenresTable on FoodItems.food_item_id = GenresTable.food_item_id JOIN Genres on GenresTable.genre_id = Genres.genre_id;";
+    // const recipes_useridname = "SELECT DISTINCT Users.user_id, CONCAT(Users.first_name, ' ', Users.last_name) FROM Recipes JOIN Users ON Recipes.user_id = Users.user_id JOIN FoodItems on Recipes.food_item_id = FoodItems.food_item_id ORDER BY Recipes.recipe_id;"
     
     //== INSERT
     const recipesInsertSuccess = (res, results) => query(recipesSelectSQL, [])
