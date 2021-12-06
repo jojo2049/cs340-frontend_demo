@@ -4,13 +4,15 @@ function init(app, pool, hb) {
 
     //== Constants
     const recipesKeys = ["user_id", "food_item_id", "quantity", "prep_time"];
-    const recipesHeaders = ["Recipe ID", "Creator", "Food Item Name", "Quantity", "Prep Time"];
-    const recipesSelectSQL = "SELECT Recipes.recipe_id as 'Recipe ID', CONCAT(Users.first_name, ' ', Users.last_name) as 'Creator', FoodItems.name as 'Food Item Name', Recipes.quantity as 'Quantity', Recipes.prep_time as 'Prep Time' FROM Recipes JOIN Users ON Recipes.user_id = Users.user_id JOIN FoodItems on Recipes.food_item_id = FoodItems.food_item_id ORDER BY Recipes.recipe_id;";
+    const recipesHeaders = ["Recipe ID", "Creator", "Recipe Name", "Quantity", "Prep Time"];
+    const recipesSelectSQL = "SELECT Recipes.recipe_id as 'Recipe ID', CONCAT(Users.first_name, ' ', Users.last_name) as 'Creator', FoodItems.name as 'Recipe Name', Recipes.quantity as 'Quantity', Recipes.prep_time as 'Prep Time' FROM Recipes JOIN Users ON Recipes.user_id = Users.user_id JOIN FoodItems on Recipes.food_item_id = FoodItems.food_item_id ORDER BY Recipes.recipe_id;";
     const recipesInsertSQL = "INSERT INTO Recipes (user_id, food_item_id, quantity, prep_time) VALUES (?, ?, ?, ?);";
     const recipesSelectGenreSQL = "SELECT Recipes.* FROM Recipes JOIN GenresTable ON GenresTable.genre_id = ? AND GenresTable.food_item_id = Recipes.food_item_id;";
     const recipesSelectFoodItemSQL = "SELECT * FROM Recipes WHERE food_item_id = ?;";
     const recipesSelectUserSQL = "SELECT * FROM Recipes WHERE user_id = ?;";
     const recipesDeleteSQL = "DELETE FROM Recipes WHERE recipe_id = ?;";
+    const recipesDeletelist = "SELECT Recipes.recipe_id as 'Recipe ID', FoodItems.name as 'Recipe Name' FROM Recipes JOIN Users ON Recipes.user_id = Users.user_id JOIN FoodItems on Recipes.food_item_id = FoodItems.food_item_id ORDER BY Recipes.recipe_id;";
+    const recipesSelectGenreslist = "SELECT genre_id, name FROM Genres;";
     
     //== INSERT
     const recipesInsertSuccess = (res, results) => query(recipesSelectSQL, [])
