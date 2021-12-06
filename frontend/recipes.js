@@ -13,6 +13,22 @@ function insertRecipe(form) {
     });
 }
 
+function updateRecipe(form) {
+    let elements = form.elements;
+    let recipe_id = elements["recipe_id"].value
+    let user_id = elements["user_id"].value;
+    let food_item_id = elements["food_item_id"].value;
+    let quantity = elements["quantity"].value;
+    let prep_time = elements["prep_time"].value;
+    let data = { user_id, food_item_id, quantity, prep_time, recipe_id };
+    // POST the form data to server.
+    postJSON("recipes/update", data)
+    .then(res => res.text())
+    .then(text => {
+        replaceInnerHTML("#container_results_table", text);
+    });
+}
+
 function selectRecipesInGenre(form) {
     let elements = form.elements;
     console.log(elements)
@@ -71,6 +87,7 @@ function initRecipes() {
     override("#form_recipes_select_food_item", "submit", selectRecipesByFoodItem);
     override("#form_recipes_select_user", "submit", selectRecipesByUser);
     override("#form_recipes_delete", "submit", deleteRecipe);
+    override("#form_recipes_update", "submit", updateRecipe);
 }
 
 

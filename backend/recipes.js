@@ -11,7 +11,7 @@ function init(app, pool, hb) {
     const recipesSelectFoodItemSQL = "SELECT * FROM Recipes WHERE food_item_id = ?;";
     const recipesSelectUserSQL = "SELECT * FROM Recipes WHERE user_id = ?;";
     const recipesDeleteSQL = "DELETE FROM Recipes WHERE recipe_id = ?;";
-    const recipesUpdateSQL = "UPDATE Recipes SET (user_id, food_item_id, quantity, prep_time) VALUES (?, ?, ?, ?) WHERE recipe_id = ?;"
+    const recipesUpdateSQL = "UPDATE Recipes SET user_id=?, food_item_id=?, quantity=?, prep_time=? WHERE recipe_id = ?;";
     const recipes_recipeidname = "SELECT Recipes.recipe_id, FoodItems.name FROM Recipes JOIN Users ON Recipes.user_id = Users.user_id JOIN FoodItems on Recipes.food_item_id = FoodItems.food_item_id ORDER BY Recipes.recipe_id;";
     const recipes_genresidname = "SELECT genre_id, name from Genres;";
     const recipes_fooditemidname = "SELECT food_item_id, name from FoodItems;";
@@ -28,6 +28,12 @@ function init(app, pool, hb) {
         .then(rows => renderTableData(rows, recipesHeaders, text => res.send(text)));
     const recipesInsertHandler = handler(recipesKeys, recipesInsertSQL, recipesInsertSuccess, logError);
     app.post("/recipes/insert", recipesInsertHandler);
+
+    //== UPDATE
+    const recipesUpdateSuccess = (res, results) => query(recipesSelectSQL, [])
+        .then(rows => renderTableData(rows, recipesHeaders, text => res.send(text)));
+    const recipesUpdateHandler = handler(["user_id", "food_item_id", "quantity", "prep_time", "recipe_id"], recipesUpdateSQL, recipesUpdateSuccess, logError);
+    app.post("/recipes/update", recipesUpdateHandler);
     
     //== SELECT BY GENRE
     const recipesSelectGenreSuccess = (res, results) => renderTableData(results, recipesHeaders, text => res.send(text));
