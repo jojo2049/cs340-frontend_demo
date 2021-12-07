@@ -1,86 +1,26 @@
-function insertRecipe(form) {
-    let data = extractFormData(form, ["user_id", "food_item_id", "quantity", "prep_time"]);
-    postJSON("recipes/insert", data)
-    .then(res => res.json())
-    .then(data => {
-        if (data.type === "success") {
-            replaceInnerHTML("#container_results_table", data.payload);
-        }
-        else {
-            alertQueryFailure(data.payload);
-        }
-    });
-}
+const insertRecipe = form =>
+    postJSON("recipes/insert", extractFormData(form, ["user_id", "food_item_id", "quantity", "prep_time"]))
+    .then(handleServerResponse(updateTableData, alertQueryFailure));
 
-function updateRecipe(form) {
-    let data = extractFormData(form, ["user_id", "food_item_id", "quantity", "prep_time", "recipe_id"]);
-    postJSON("recipes/update", data)
-    .then(res => res.json())
-    .then(data => {
-        if (data.type === "success") {
-            replaceInnerHTML("#container_results_table", data.payload);
-        }
-        else {
-            alertQueryFailure(data.payload);
-        }
-    });
-}
+const updateRecipe = form =>
+    postJSON("recipes/update", extractFormData(form, ["user_id", "food_item_id", "quantity", "prep_time", "recipe_id"]))
+    .then(handleServerResponse(updateTableData, alertQueryFailure));
 
-function selectRecipesInGenre(form) {
-    let data = extractFormData(form, ["genre_id"]);
-    postJSON("recipes/select/genre", data)
-    .then(res => res.json())
-    .then(data => {
-        if (data.type === "success") {
-            replaceInnerHTML("#container_results_table", data.payload);
-        }
-        else {
-            alertQueryFailure(data.payload);
-        }
-    });
-}
+const selectRecipesInGenre = form => 
+    postJSON("recipes/select/genre", extractFormData(form, ["genre_id"]))
+    .then(handleServerResponse(updateTableData, alertQueryFailure));
 
-function selectRecipesByFoodItem(form) {
-    let data = extractFormData(form, ["food_item_id"]);
-    postJSON("recipes/select/food_item", data)
-    .then(res => res.json())
-    .then(data => {
-        if (data.type === "success") {
-            replaceInnerHTML("#container_results_table", data.payload);
-        }
-        else {
-            alertQueryFailure(data.payload);
-        }
-    });
-}
+const selectRecipesByFoodItem = form => 
+    postJSON("recipes/select/food_item", extractFormData(form, ["food_item_id"]))
+    .then(handleServerResponse(updateTableData, alertQueryFailure));
 
-function selectRecipesByUser(form) {
-    let data = extractFormData(form, ["user_id"]);
-    postJSON("recipes/select/user", data)
-    .then(res => res.json())
-    .then(data => {
-        if (data.type === "success") {
-            replaceInnerHTML("#container_results_table", data.payload);
-        }
-        else {
-            alertQueryFailure(data.payload);
-        }
-    });
-}
+const selectRecipesByUser = form =>
+    postJSON("recipes/select/user", extractFormData(form, ["user_id"]))
+    .then(handleServerResponse(updateTableData, alertQueryFailure));
 
-function deleteRecipe(form){
-    let data = extractFormData(form, ["recipe_id"]);
-    postJSON("recipes/delete", data)
-    .then(res => res.json())
-    .then(data => {
-        if (data.type === "success") {
-            replaceInnerHTML("#container_results_table", data.payload);
-        }
-        else {
-            alertQueryFailure(data.payload);
-        }
-    });
-}
+const deleteRecipe = form =>
+    postJSON("recipes/delete", extractFormData(form, ["recipe_id"]))
+    .then(handleServerResponse(updateTableData, alertQueryFailure));
 
 function initRecipes() {
     override("#form_recipes_insert", "submit", insertRecipe);
@@ -90,8 +30,5 @@ function initRecipes() {
     override("#form_recipes_delete", "submit", deleteRecipe);
     override("#form_recipes_update", "submit", updateRecipe);
 }
-
-
-
 
 window.onload = initRecipes;

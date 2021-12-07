@@ -18,8 +18,7 @@ function init(app, pool, hb) {
     const genresGetSuccess = (res, rows) => {
         let context = {
             results_table: {headers: genresHeaders, rows},
-            scripts: ["genres.js"],
-            layout: "query_interface"
+            scripts: ["genres.js"]
         };
         renderPartialHTML("views/genres.handlebars", context)
         .then(html => res.send(html));

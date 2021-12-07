@@ -18,8 +18,7 @@ function init(app, pool, hb) {
     const food_itemsGetSuccess = (res, rows) => {
         let context = {
             results_table: {headers: food_itemsHeaders, rows},
-            scripts: ["food_items.js"],
-            layout: "query_interface"
+            scripts: ["food_items.js"]
         };
         renderPartialHTML("views/food_items.handlebars", context)
         .then(html => res.send(html));

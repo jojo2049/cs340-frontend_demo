@@ -18,8 +18,7 @@ function init(app, pool, hb) {
     const usersGetSuccess = (res, rows) => {
         let context = {
             results_table: {headers: usersHeaders, rows},
-            scripts: ["users.js"],
-            layout: "query_interface"
+            scripts: ["users.js"]
         };
         renderPartialHTML("views/users.handlebars", context)
         .then(html => res.send(html));

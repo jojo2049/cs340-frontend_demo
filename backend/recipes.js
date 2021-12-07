@@ -60,8 +60,7 @@ function init(app, pool, hb) {
     const recipesGetSuccess = (res, rows) => {
         let context = {
             results_table: {headers: recipesHeaders, rows},
-            scripts: ["recipes.js"],
-            layout: "query_interface"
+            scripts: ["recipes.js"]
         };
         renderPartialHTML("views/recipes.handlebars", context)
         .then(html => res.send(html));

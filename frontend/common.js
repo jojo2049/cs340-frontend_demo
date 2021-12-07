@@ -1,3 +1,22 @@
+function handleServerResponse(cbSuccess, cbFailure) {
+    return res => {
+        res.json()
+        .then(data => {
+            if (data.type === "success") {
+                cbSuccess(data.payload);
+            }
+            else {
+                cbFailure(data.payload);
+            }
+        });
+    }
+}
+
+function updateTableData(data) {
+    replaceInnerHTML("#container_results_table", data);
+    hideFailureBox();
+}
+
 function extractFormData(form, keys) {
     let data = {};
     for (let key of keys) {
@@ -6,8 +25,22 @@ function extractFormData(form, keys) {
     return data;
 }
 
+function showFailureBox() {
+    let elem = document.getElementById("container_results_message");
+    elem.style.display = "block";
+    elem.style.visibility = "visible";
+}
+
+function hideFailureBox() {
+    let elem = document.getElementById("container_results_message");
+    elem.style.display = "none";
+    elem.style.visibility = "hidden";
+}
+
 function alertQueryFailure(msg) {
-    alert("QUERY FAILURE: " + msg);
+    replaceInnerHTML("#container_results_message", "<b>Query Failed: </b><p>" + msg + "</p>");
+    showFailureBox();
+    // alert("QUERY FAILURE: " + msg);
 }
 
 // Replaces the inner HTML of the selected element.
