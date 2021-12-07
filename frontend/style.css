@@ -12,10 +12,39 @@ input {
     margin: 2px 2px 2px 2px;
 }
 
-.container {
+#container_results_table {
     background-color: #f4f4f4;
     padding: 2px 10px 2px 10px;
     margin: 10px 2px 10px 2px;
+}
+
+.container {
+    background-color: #f4f4f4;
+    padding: 0px 0px 0px 00px;
+    margin: 0px 0px 10px 0px;
+    /* padding: 2px 10px 2px 10px; */
+    /* margin: 10px 2px 10px 2px; */
+}
+
+.container_content {
+    background-color: #f0f0f0;
+    padding: 2px 10px 2px 10px;
+    display: none;
+    overflow: hidden;
+}
+
+.collapsible {
+    background-color: #f4f4f4;
+    padding: 0px 0px 0px 10px;
+    margin: 0px 0px 0px 0px;
+    border: none;
+    width: 100%;
+    cursor: pointer;
+    text-align: left;
+}
+
+.active, .collapsible:hover {
+    background-color: #e0e0e0;
 }
 
 #container_results_message {

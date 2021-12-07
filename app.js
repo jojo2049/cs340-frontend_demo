@@ -23,8 +23,8 @@ app.use(express.json());
 app.use("/static", express.static("frontend"));
 
 let sendFile = file_name => (req, res) => res.sendFile(file_name, {root: ROOT});
-app.get("/",                    sendFile("index.html"));
-app.get("/home",                sendFile("index.html"));
+app.get("/", sendFile("index.html"));
+app.get("/home", sendFile("index.html"));
 
 require("./backend/recipes").init(app, pool, handlebars);
 require("./backend/genres_table").init(app, pool, handlebars);
