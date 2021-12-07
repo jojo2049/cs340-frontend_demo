@@ -23,6 +23,7 @@ const deleteRecipe = form =>
     .then(handleServerResponse(updateTableData, alertQueryFailure));
 
 function initRecipes() {
+    initCollapsibles();
     override("#form_recipes_insert", "submit", insertRecipe);
     override("#form_recipes_select_genre", "submit", selectRecipesInGenre);
     override("#form_recipes_select_food_item", "submit", selectRecipesByFoodItem);
