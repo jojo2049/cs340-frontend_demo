@@ -26,21 +26,20 @@ function extractFormData(form, keys) {
 }
 
 function showFailureBox() {
-    let elem = document.getElementById("container_results_message");
+    let elem = document.querySelector("#container_results_message");
     elem.style.display = "block";
     elem.style.visibility = "visible";
 }
 
 function hideFailureBox() {
-    let elem = document.getElementById("container_results_message");
+    let elem = document.querySelector("#container_results_message");
     elem.style.display = "none";
     elem.style.visibility = "hidden";
 }
 
 function alertQueryFailure(msg) {
-    replaceInnerHTML("#container_results_message", "<b>Query Failed: </b><p>" + msg + "</p>");
+    replaceInnerHTML("#container_results_message", "<b>Query Failed: </b><br><p>" + msg + "</p>");
     showFailureBox();
-    // alert("QUERY FAILURE: " + msg);
 }
 
 // Replaces the inner HTML of the selected element.
@@ -74,4 +73,20 @@ function postJSON(route, data) {
         // Data to be sent.
         body: JSON.stringify(data)
     });
+}
+
+function initCollapsibles() {
+    let elems = document.getElementsByClassName("collapsible");
+    for (let elem of elems) {
+        elem.addEventListener("click", function() {
+            this.classList.toggle("active");
+            let content = this.nextElementSibling;
+            if (content.style.display === "block") {
+                content.style.display = "none";
+            }
+            else {
+                content.style.display = "block";
+            }
+        });
+    }
 }

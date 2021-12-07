@@ -3,44 +3,50 @@
 <p>Select recipes based on: Genres, Ingredients, or User.</p>
 
 <div class="container">
-    <h3>Insert Recipe</h3>
-    <form id="form_recipes_insert">
-        <label for="user_id">User ID:</label>
-        <input type="text" name="user_id"><br>
-        <label for="food_item_id">FoodItem ID:</label>
-        <input type="text" name="food_item_id"><br>
-        <label for="quantity">Quantity:</label>
-        <input type="text" name="quantity"><br>
-        <label for="prep_time">Preptime:</label>
-        <input type="text" name="prep_time"><br>
-        <input type="submit" value="INSERT new Recipe">
-    </form>
+    <button type="button" class="collapsible"><h3>Insert Recipe</h3></button>
+    <div class="container_content">
+        <form id="form_recipes_insert">
+            <label for="user_id">User ID:</label>
+            <input type="text" name="user_id"><br>
+            <label for="food_item_id">FoodItem ID:</label>
+            <input type="text" name="food_item_id"><br>
+            <label for="quantity">Quantity:</label>
+            <input type="text" name="quantity"><br>
+            <label for="prep_time">Preptime:</label>
+            <input type="text" name="prep_time"><br>
+            <input type="submit" value="INSERT new Recipe">
+        </form>
+    </div>
 </div>
 
 <div class="container">
-    <h3>Update Recipe</h3>
-    <form id="form_recipes_update">
-        <label for="recipe_id">Recipe ID:</label>
-        <input type="text" name="recipe_id"><br>
-        <label for="user_id">User ID:</label>
-        <input type="text" name="user_id"><br>
-        <label for="food_item_id">FoodItem ID:</label>
-        <input type="text" name="food_item_id"><br>
-        <label for="quantity">Quantity:</label>
-        <input type="text" name="quantity"><br>
-        <label for="prep_time">Preptime:</label>
-        <input type="text" name="prep_time"><br>
-        <input type="submit" value="UPDATE Recipe">
-    </form>
+    <button type="button" class="collapsible"><h3>Update Recipe</h3></button>
+    <div class="container_content">
+        <form id="form_recipes_update">
+            <label for="recipe_id">Recipe ID:</label>
+            <input type="text" name="recipe_id"><br>
+            <label for="user_id">User ID:</label>
+            <input type="text" name="user_id"><br>
+            <label for="food_item_id">FoodItem ID:</label>
+            <input type="text" name="food_item_id"><br>
+            <label for="quantity">Quantity:</label>
+            <input type="text" name="quantity"><br>
+            <label for="prep_time">Preptime:</label>
+            <input type="text" name="prep_time"><br>
+            <input type="submit" value="UPDATE Recipe">
+        </form>
+    </div>
 </div>
 
 <div class="container">
-    <h3>Delete Recipe</h3>
-    <form id="form_recipes_delete">
-        <label for="recipe_id">Recipe ID:</label>
-        <input type="text" name="recipe_id"><br>
-        <input type="submit" value="DELETE Recipe">
-    </form>
+    <button type="button" class="collapsible"><h3>Delete Recipe</h3></button>
+    <div class="container_content">
+        <form id="form_recipes_delete">
+            <label for="recipe_id">Recipe ID:</label>
+            <input type="text" name="recipe_id"><br>
+            <input type="submit" value="DELETE Recipe">
+        </form>
+    </div>
 </div>
 
 {{!-- Testing Delete Dropdown box --}}
@@ -56,28 +62,34 @@
 </div> --}}
 
 <div class="container">
-    <h3>Select Recipes in Genre</h3>
-    <form id="form_recipes_select_genre">
-        <label for="genre_id">Genre ID:</label>
-        <input type="text" name="genre_id"><br>
-        <input type="submit" value="SELECT Recipes in Genre">
-    </form>
+    <button type="button" class="collapsible"><h3>Select Recipes in Genre</h3></button>
+    <div class="container_content">
+        <form id="form_recipes_select_genre">
+            <label for="genre_id">Genre ID:</label>
+            <input type="text" name="genre_id"><br>
+            <input type="submit" value="SELECT Recipes in Genre">
+        </form>
+    </div>
 </div>
 
 <div class="container">
-    <h3>Select Recipes with FoodItem</h3>
-    <form id="form_recipes_select_food_item">
-        <label for="food_item_id">FoodItem ID:</label>
-        <input type="text" name="food_item_id"><br>
-        <input type="submit" value="SELECT Recipes with FoodItem">
-    </form>
+    <button type="button" class="collapsible"><h3>Select Recipes with FoodItem</h3></button>
+    <div class="container_content">
+        <form id="form_recipes_select_food_item">
+            <label for="food_item_id">FoodItem ID:</label>
+            <input type="text" name="food_item_id"><br>
+            <input type="submit" value="SELECT Recipes with FoodItem">
+        </form>
+    </div>
 </div>
 
 <div class="container">
-    <h3>Select Recipes by User</h3>
-    <form id="form_recipes_select_user">
-        <label for="user_id">User ID:</label>
-        <input type="text" name="user_id"><br>
-        <input type="submit" value="SELECT Recipes by User">
-    </form>
+    <button type="button" class="collapsible"><h3>Select Recipes by User</h3></button>
+    <div class="container_content">
+        <form id="form_recipes_select_user">
+            <label for="user_id">User ID:</label>
+            <input type="text" name="user_id"><br>
+            <input type="submit" value="SELECT Recipes by User">
+        </form>
+    </div>
 </div>
