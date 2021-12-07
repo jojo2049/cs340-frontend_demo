@@ -7,7 +7,8 @@ function insertUser(form) {
     // POST the form data to server.
     postJSON("users/insert", data)
     // Refresh the page once we get a response.
-    .then(_ => window.location.reload());
+    .then(res => res.text())
+    .then(text => replaceInnerHTML("#container_results_table", text));
 }
 
 function initUsers() {

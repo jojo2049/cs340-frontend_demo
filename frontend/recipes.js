@@ -1,84 +1,97 @@
+function extractFormData(form, keys) {
+    let data = {};
+    for (let key of keys) {
+        data[key] = form.elements[key].value;
+    }
+    return data;
+}
+
+function alertQueryFailure(msg) {
+    alert("QUERY FAILURE: " + msg);
+}
+
 function insertRecipe(form) {
-    let elements = form.elements;
-    let user_id = elements["user_id"].value;
-    let food_item_id = elements["food_item_id"].value;
-    let quantity = elements["quantity"].value;
-    let prep_time = elements["prep_time"].value;
-    let data = { user_id, food_item_id, quantity, prep_time };
-    // POST the form data to server.
+    let data = extractFormData(form, ["user_id", "food_item_id", "quantity", "prep_time"]);
     postJSON("recipes/insert", data)
-    .then(res => res.text())
-    .then(text => {
-        replaceInnerHTML("#container_results_table", text);
+    .then(res => res.json())
+    .then(data => {
+        if (data.type === "success") {
+            replaceInnerHTML("#container_results_table", data.payload);
+        }
+        else {
+            alertQueryFailure(data.payload);
+        }
     });
 }
 
 function updateRecipe(form) {
-    let elements = form.elements;
-    let recipe_id = elements["recipe_id"].value
-    let user_id = elements["user_id"].value;
-    let food_item_id = elements["food_item_id"].value;
-    let quantity = elements["quantity"].value;
-    let prep_time = elements["prep_time"].value;
-    let data = { user_id, food_item_id, quantity, prep_time, recipe_id };
-    // POST the form data to server.
+    let data = extractFormData(form, ["user_id", "food_item_id", "quantity", "prep_time", "recipe_id"]);
     postJSON("recipes/update", data)
-    .then(res => res.text())
-    .then(text => {
-        replaceInnerHTML("#container_results_table", text);
+    .then(res => res.json())
+    .then(data => {
+        if (data.type === "success") {
+            replaceInnerHTML("#container_results_table", data.payload);
+        }
+        else {
+            alertQueryFailure(data.payload);
+        }
     });
 }
 
 function selectRecipesInGenre(form) {
-    let elements = form.elements;
-    console.log(elements)
-    let genre_id = elements["genre_id"].value;
-    let data = { genre_id };
-    console.log("SELECT query: " + JSON.stringify(data))
+    let data = extractFormData(form, ["genre_id"]);
     postJSON("recipes/select/genre", data)
-    .then(res => res.text())
-    .then(text => {
-        replaceInnerHTML("#container_results_table", text);
+    .then(res => res.json())
+    .then(data => {
+        if (data.type === "success") {
+            replaceInnerHTML("#container_results_table", data.payload);
+        }
+        else {
+            alertQueryFailure(data.payload);
+        }
     });
 }
 
 function selectRecipesByFoodItem(form) {
-    let elements = form.elements;
-    console.log(elements)
-    let food_item_id = elements["food_item_id"].value;
-    let data = { food_item_id };
-    console.log("SELECT query: " + JSON.stringify(data))
+    let data = extractFormData(form, ["food_item_id"]);
     postJSON("recipes/select/food_item", data)
-    .then(res => res.text())
-    .then(text => {
-        replaceInnerHTML("#container_results_table", text);
+    .then(res => res.json())
+    .then(data => {
+        if (data.type === "success") {
+            replaceInnerHTML("#container_results_table", data.payload);
+        }
+        else {
+            alertQueryFailure(data.payload);
+        }
     });
 }
 
 function selectRecipesByUser(form) {
-    let elements = form.elements;
-    console.log(elements)
-    let user_id = elements["user_id"].value;
-    let data = { user_id };
-    console.log("SELECT query: " + JSON.stringify(data))
+    let data = extractFormData(form, ["user_id"]);
     postJSON("recipes/select/user", data)
-    .then(res => res.text())
-    .then(text => {
-        replaceInnerHTML("#container_results_table", text);
+    .then(res => res.json())
+    .then(data => {
+        if (data.type === "success") {
+            replaceInnerHTML("#container_results_table", data.payload);
+        }
+        else {
+            alertQueryFailure(data.payload);
+        }
     });
 }
 
 function deleteRecipe(form){
-  let elements = form.elements;
-  console.log(elements)
-  let recipe_id = elements["recipe_id"].value;
-  let data = { recipe_id };
-  // POST the form data to server.
-  postJSON("recipes/delete", data)
-  .then(res => res.text())
-  .then(text => {
-      replaceInnerHTML("#container_results_table", text);
-  })
+    let data = extractFormData(form, ["recipe_id"]);
+    postJSON("recipes/delete", data)
+    .then(res => res.json())
+    .then(data => {
+        if (data.type === "success") {
+            replaceInnerHTML("#container_results_table", data.payload);
+        }
+        else {
+            alertQueryFailure(data.payload);
+        }
+    });
 }
 
 function initRecipes() {

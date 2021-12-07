@@ -10,7 +10,7 @@ function init(app, pool, hb) {
 
     //== INSERT
     const usersInsertSuccess = (res, results) => query(usersSelectSQL, [])
-        .then(rows => renderTableData(rows, usersHeaders, text => res.send(text)));
+        .then(rows => renderTableData(rows, usersHeaders, text => res.json({type: "success", payload: text})));
     const usersInsertHandler = handler(usersKeys, usersInsertSQL, usersInsertSuccess, logError);
     app.post("/users/insert", usersInsertHandler);
 

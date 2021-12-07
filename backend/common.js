@@ -44,9 +44,17 @@ function init(pool, hb) {
                 cbSuccess(res, results);
             })
             .catch(error => {
-                cbFailure(res, error);
+                cbFailure(res, error.sqlMessage);
             })
         }
+    }
+
+    function respondError(res, payload) {
+        res.json({type: "failure", payload});
+    }
+
+    function respondSuccess(res, payload) {
+        res.json({type: "success", payload})
     }
 
     return {
@@ -54,6 +62,8 @@ function init(pool, hb) {
         query,
         renderTableData,
         extractValues,
-        handler
+        handler,
+        respondError,
+        respondSuccess
     }
 }

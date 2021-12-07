@@ -26,24 +26,26 @@
         
         {{{body}}}
 
-        <div id="container_results_table" class="container">
+        <div class="container">
             <h3>{{title}} Data</h3>
-            <table>
-                {{#with results_table}}
-                <tr>
-                    {{#each headers}}
-                    <th>{{this}}</th>
+            <div id="container_results_table">
+                <table>
+                    {{#with results_table}}
+                    <tr>
+                        {{#each headers}}
+                        <th>{{this}}</th>
+                        {{/each}}
+                    </tr>
+                    {{#each rows}}
+                    <tr>
+                        {{#each this}}
+                        <td>{{this}}</td>
+                        {{/each}}
+                    </tr>
                     {{/each}}
-                </tr>
-                {{#each rows}}
-                <tr>
-                    {{#each this}}
-                    <td>{{this}}</td>
-                    {{/each}}
-                </tr>
-                {{/each}}
-                {{/with}}
-            </table>
+                    {{/with}}
+                </table>
+            </div>
         </div>
     </body>
 </html>

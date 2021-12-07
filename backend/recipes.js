@@ -1,6 +1,6 @@
 function init(app, pool, hb) {
     //== Initialize helper functions.
-    const { renderPartialHTML, query, renderTableData, handler} = require("./common").init(pool, hb);
+    const { renderPartialHTML, query, renderTableData, handler, respondSuccess, respondError } = require("./common").init(pool, hb);
 
     //== Constants
     const recipesKeys = ["user_id", "food_item_id", "quantity", "prep_time"];
@@ -22,38 +22,38 @@ function init(app, pool, hb) {
     // const recipes_genresidname = "SELECT DISTINCT Genres.genre_id, Genres.name FROM Recipes JOIN FoodItems on Recipes.food_item_id = FoodItems.food_item_id JOIN GenresTable on FoodItems.food_item_id = GenresTable.food_item_id JOIN Genres on GenresTable.genre_id = Genres.genre_id;";
     // const recipes_fooditemidname = "SELECT DISTINCT FoodItems.food_item_id, FoodItems.name FROM Recipes JOIN FoodItems on Recipes.food_item_id = FoodItems.food_item_id JOIN GenresTable on FoodItems.food_item_id = GenresTable.food_item_id JOIN Genres on GenresTable.genre_id = Genres.genre_id;";
     // const recipes_useridname = "SELECT DISTINCT Users.user_id, CONCAT(Users.first_name, ' ', Users.last_name) FROM Recipes JOIN Users ON Recipes.user_id = Users.user_id JOIN FoodItems on Recipes.food_item_id = FoodItems.food_item_id ORDER BY Recipes.recipe_id;"
-    
+
     //== INSERT
     const recipesInsertSuccess = (res, results) => query(recipesSelectSQL, [])
-        .then(rows => renderTableData(rows, recipesHeaders, text => res.send(text)));
-    const recipesInsertHandler = handler(recipesKeys, recipesInsertSQL, recipesInsertSuccess, logError);
+        .then(rows => renderTableData(rows, recipesHeaders, text => respondSuccess(res, text)));
+    const recipesInsertHandler = handler(recipesKeys, recipesInsertSQL, recipesInsertSuccess, respondError);
     app.post("/recipes/insert", recipesInsertHandler);
 
     //== UPDATE
     const recipesUpdateSuccess = (res, results) => query(recipesSelectSQL, [])
-        .then(rows => renderTableData(rows, recipesHeaders, text => res.send(text)));
-    const recipesUpdateHandler = handler(["user_id", "food_item_id", "quantity", "prep_time", "recipe_id"], recipesUpdateSQL, recipesUpdateSuccess, logError);
+        .then(rows => renderTableData(rows, recipesHeaders, text => respondSuccess(res, text)));
+    const recipesUpdateHandler = handler(["user_id", "food_item_id", "quantity", "prep_time", "recipe_id"], recipesUpdateSQL, recipesUpdateSuccess, respondError);
     app.post("/recipes/update", recipesUpdateHandler);
     
     //== SELECT BY GENRE
-    const recipesSelectGenreSuccess = (res, results) => renderTableData(results, recipesHeaders, text => res.send(text));
-    const recipesSelectGenreHandler = handler(["genre_id"], recipesSelectGenreSQL, recipesSelectGenreSuccess, logError);
+    const recipesSelectGenreSuccess = (res, results) => renderTableData(results, recipesHeaders, text => respondSuccess(res, text));
+    const recipesSelectGenreHandler = handler(["genre_id"], recipesSelectGenreSQL, recipesSelectGenreSuccess, respondError);
     app.post("/recipes/select/genre", recipesSelectGenreHandler);
 
     //== SELECT BY FOODITEM
-    const recipesSelectFoodItemSuccess = (res, results) => renderTableData(results, recipesHeaders, text => res.send(text));
-    const recipesSelectFoodItemHandler = handler(["food_item_id"], recipesSelectFoodItemSQL, recipesSelectFoodItemSuccess, logError);
+    const recipesSelectFoodItemSuccess = (res, results) => renderTableData(results, recipesHeaders, text => respondSuccess(res, text));
+    const recipesSelectFoodItemHandler = handler(["food_item_id"], recipesSelectFoodItemSQL, recipesSelectFoodItemSuccess, respondError);
     app.post("/recipes/select/food_item", recipesSelectFoodItemHandler);
 
     //== SELECT BY USER
-    const recipesSelectUserSuccess = (res, results) => renderTableData(results, recipesHeaders, text => res.send(text));
-    const recipesSelectUserHandler = handler(["user_id"], recipesSelectUserSQL, recipesSelectUserSuccess, logError);
+    const recipesSelectUserSuccess = (res, results) => renderTableData(results, recipesHeaders, text => respondSuccess(res, text));
+    const recipesSelectUserHandler = handler(["user_id"], recipesSelectUserSQL, recipesSelectUserSuccess, respondError);
     app.post("/recipes/select/user", recipesSelectUserHandler);
 
     //== DELETE
     const recipesDeleteSuccess = (res, results) => query(recipesSelectSQL, [])
-        .then(rows => renderTableData(rows, recipesHeaders, text => res.send(text)));
-    const recipesDeleteHandler = handler(["recipe_id"], recipesDeleteSQL, recipesDeleteSuccess, logError);
+        .then(rows => renderTableData(rows, recipesHeaders, text => respondSuccess(res, text)));
+    const recipesDeleteHandler = handler(["recipe_id"], recipesDeleteSQL, recipesDeleteSuccess, respondError);
     app.post("/recipes/delete", recipesDeleteHandler);
 
     //== GET
@@ -66,7 +66,7 @@ function init(app, pool, hb) {
         renderPartialHTML("views/recipes.handlebars", context)
         .then(html => res.send(html));
     }
-    const recipesGetHandler = handler([], recipesSelectSQL, recipesGetSuccess, logError);
+    const recipesGetHandler = handler([], recipesSelectSQL, recipesGetSuccess, respondError);
     app.get("/recipes", recipesGetHandler);
 
     //== Helper
