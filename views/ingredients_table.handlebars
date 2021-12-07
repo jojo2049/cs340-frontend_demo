@@ -6,9 +6,19 @@
     <div class="container_content">
         <form id="form_ingredients_table_insert">
             <label for="recipe_id">Recipe ID:</label>
-            <input type="text" name="recipe_id"><br>
+            <select name="recipe_id">
+                {{#each recipe_id_to_name}}
+                <option value={{@key}}>{{this}}</option>
+                {{/each}}
+            </select>
+            <br>
             <label for="food_item_id">FoodItem ID:</label>
-            <input type="text" name="food_item_id"><br>
+            <select name="food_item_id">
+                {{#each food_item_id_to_name}}
+                <option value={{@key}}>{{this}}</option>
+                {{/each}}
+            </select>
+            <br>
             <label for="quantity">FoodItem Quantity:</label>
             <input type="text" name="quantity"><br>
             <input type="submit" value="INSERT new FoodItem into Recipe">
@@ -21,9 +31,19 @@
     <div class="container_content">
         <form id="form_ingredients_table_delete">
             <label for="recipe_id">Recipe ID:</label>
-            <input type="text" name="recipe_id"><br>
+            <select name="recipe_id">
+                {{#each recipe_id_to_name}}
+                <option value={{@key}}>{{this}}</option>
+                {{/each}}
+            </select>
+            <br>
             <label for="food_item_id">FoodItem ID:</label>
-            <input type="text" name="food_item_id"><br>
+            <select name="food_item_id">
+                {{#each food_item_id_to_name}}
+                <option value={{@key}}>{{this}}</option>
+                {{/each}}
+            </select>
+            <br>
             <input type="submit" value="DELETE FoodItem from Recipe">
         </form>
     </div>
