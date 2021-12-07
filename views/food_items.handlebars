@@ -6,28 +6,8 @@
     <form id="form_food_items_insert">
         <label for="name">Name:</label>
         <input type="text" name="name"><br>
-        <label for="calories">Calories:</label>
-        <input type="text" name="calories"><br>
+        <label for="calorie">Calories:</label>
+        <input type="text" name="calorie"><br>
         <input type="submit" value="INSERT new FoodItem">
     </form>
-</div>
-
-<div class="container">
-    <h3>FoodItems Data</h3>
-    <table>
-        <tr>
-            <th>food_item_id</th>
-            <th>name</th>
-            <th>calories</th>
-        </tr>
-        {{#each food_items}}
-        {{#with this}}
-        <tr>
-            <td>{{food_item_id}}</td>
-            <td>{{name}}</td>
-            <td>{{calorie}}</td>
-        </tr>
-        {{/with}}
-        {{/each}}
-    </table>
 </div>

@@ -1,91 +1,41 @@
 function init(app, pool, hb) {
-  // Helper function to render partial HTML fragments.
-  // Returns a promise.
-  function renderPartialHTML(hb_path, context) {
-      let frag = hb.renderView(hb_path, context);
-      return frag;
-  }
+    //== Initialize helper functions.
+    const { renderPartialHTML, query, renderTableData, handler, respondSuccess, respondError } = require("./common").init(pool, hb);
 
-  // Helper function for querying database.
-  function query(sql, values, cbSuccess, cbFailure) {
-      pool.query(sql, values, (error, results, fields) => {
-          if (error) {
-              cbFailure(error);
-          }
-          else {
-              cbSuccess(results);
-          }
-      });
-  }
+    //=Constants
+    const ingredients_tableKeys = [ "recipe_id", "food_item_id", "quantity" ];
+    const ingredients_tableHeaders = [ "Recipe ID", "Food Item ID", "Ingredient Name", "Quantity" ];
+    const ingredients_tableSelectSQL = "SELECT A.recipe_ID, A.food_item_id, C.name, A.quantity FROM IngredientsTable A JOIN Recipes B ON A.recipe_id = B.recipe_id JOIN FoodItems C ON A.food_item_id = C.food_item_id;";
+    const ingredients_tableInsertSQL= "INSERT INTO IngredientsTable (recipe_id, food_item_id, quantity) VALUES (?, ?, ?);";
+    const ingredients_tableDeleteSQL = "DELETE FROM IngredientsTable WHERE recipe_id = ? and food_item_id=?;";
+    const ingredients_fooditemidname = "SELECT food_item_id, name FROM FoodItems;"
+    const ingredients_recipeidname = "SELECT Recipes.recipe_id, FoodItems.name FROM Recipes JOIN Users ON Recipes.user_id = Users.user_id JOIN FoodItems on Recipes.food_item_id = FoodItems.food_item_id ORDER BY Recipes.recipe_id;"
 
-  // Helper function for creating a newly rendered table fragment.
-  function renderTableData(rows, callback) {
-      let results_table = {
-          headers: ["Recipe ID", "Food Item ID", "Ingredient Name", "Quantity"],
-          rows: [...rows]
-      };
-      let context = {results_table, layout: false};
-      renderPartialHTML("views/partials/results_table.handlebars", context)
-      .then(callback);
-  }
+    //== INSERT
+    const ingredients_tableInsertSuccess = (res, results) => query(ingredients_tableSelectSQL, [])
+        .then(rows => renderTableData(rows, ingredients_tableHeaders, text => respondSuccess(res, text)));
+    const ingredients_tableInsertHandler = handler(ingredients_tableKeys, ingredients_tableInsertSQL, ingredients_tableInsertSuccess, respondError);
+    app.post("/ingredients_table/insert", ingredients_tableInsertHandler);
 
-  // Helper function, returns a list of values gathered from data.
-  function extractValues(data, keys) {
-      let values = [];
-      for (let key of keys) {
-          values.push(data[key]);
-      }
-      return values;
-  }
+    //== DELETE
+    const ingredients_tableDeleteSuccess = (res, results) => query(ingredients_tableSelectSQL, [])
+    .then(rows => renderTableData(rows, ingredients_tableHeaders, text => respondSuccess(res, text)));
+    const ingredients_tableDeleteHandler = handler(["recipe_id", "food_item_id"], ingredients_tableDeleteSQL, ingredients_tableDeleteSuccess, respondError);
+    app.post("/ingredients_table/delete", ingredients_tableDeleteHandler);
 
-  // Helper function, given a response object it returns a function.
-  function failure(res) {
-      return (error) => {
-          console.log("Error:");
-          console.log(error);
-          res.json(error);
-      }
-  }
-
-  app.post('/ingredients_table/insert', (req, res) => {
-    let sql = "INSERT INTO IngredientsTable (recipe_id, food_item_id, quantity) VALUES (?, ?, ?);"
-    let values = [req.body["recipe_id"], req.body["food_item_id"], req.body["quantity"]];
-    query(sql, values, success, failure(res))
-        
-    function success(result) {
-        // Upon success, get the most up to date table data and render it.
-        query("SELECT A.recipe_ID, A.food_item_id, C.name, A.quantity FROM IngredientsTable A JOIN Recipes B ON A.recipe_id = B.recipe_id JOIN FoodItems C ON A.food_item_id = C.food_item_id;", [], rows => renderTableData(rows, text => res.send(text)), failure(res));
+    //== GET
+    const ingredients_tableGetSuccess = (res, rows) => {
+        let context = {
+            results_table: {headers: ingredients_tableHeaders, rows},
+            scripts: ["ingredients_table.js"]
+        };
+        renderPartialHTML("views/ingredients_table.handlebars", context)
+        .then(html => res.send(html));
     }
-});
+    const ingredients_tableGetHandler = handler([], ingredients_tableSelectSQL, ingredients_tableGetSuccess, respondError);
+    app.get("/ingredients_table", ingredients_tableGetHandler);
 
-    app.get("/ingredients_table", (req, res) => {
-        let sql = "SELECT A.recipe_ID, A.food_item_id, C.name, A.quantity FROM IngredientsTable A JOIN Recipes B ON A.recipe_id = B.recipe_id JOIN FoodItems C ON A.food_item_id = C.food_item_id;"
-        query(sql, [], success, failure(res));
-
-        function success(rows) {
-            // Upon success, render the whole HTML page including an updated data table.
-            let results_table = {
-            headers: ["Recipe ID", "Food Item ID", "Ingredient Name", "Quantity"],
-                rows: [...rows]
-            };
-            let context = {results_table, layout: "query_interface", scripts: ["ingredients_table.js"]};
-            renderPartialHTML("views/ingredients_table.handlebars", context)
-            .then(html => res.send(html));
-        }
-    });
-
-    app.post("/ingredients_table/delete", (req, res) => {
-        let sql = "DELETE FROM IngredientsTable WHERE recipe_id = ? and food_item_id=?;"
-        let values = [req.body["recipe_id"], req.body["food_item_id"]];
-        query(sql, values, success, failure(res))
-        
-        function success(result) {
-            // Upon success, get the most up to date table data and render it.
-            query("SELECT A.recipe_ID, A.food_item_id, C.name, A.quantity FROM IngredientsTable A JOIN Recipes B ON A.recipe_id = B.recipe_id JOIN FoodItems C ON A.food_item_id = C.food_item_id;", [], rows => renderTableData(rows, text => res.send(text)), failure(res));
-        }
-    });
-
-  console.log("Successfully init ingredients_table.js");
+    console.log("Successfully init ingredients_table.js");
 }
 
-module.exports.init = init;
+module.exports.init = init

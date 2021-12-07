@@ -9,21 +9,3 @@
         <input type="submit" value="INSERT new Genre">
     </form>
 </div>
-
-<div class="container">
-    <h3>Genres Data</h3>
-    <table>
-        <tr>
-            <th>genre_id</th>
-            <th>name</th>
-        </tr>
-        {{#each genres}}
-        {{#with this}}
-        <tr>
-            <td>{{genre_id}}</td>
-            <td>{{name}}</td>
-        </tr>
-        {{/with}}
-        {{/each}}
-    </table>
-</div>

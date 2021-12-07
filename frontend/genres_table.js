@@ -1,12 +1,15 @@
 function insertGenresTable(form) {
-    let elements = form.elements;
-    let genre_id = elements["genre_id"].value;
-    let food_item_id = elements["food_item_id"].value;
-    let data = { genre_id, food_item_id };
-    // POST the form data to server.
+    let data = extractFormData(form, ["genre_id", "food_item_id"]);
     postJSON("genres_table/insert", data)
-    // Refresh the page once we get a response.
-    .then(_ => window.location.reload());
+    .then(res => res.json())
+    .then(data => {
+        if (data.type === "success") {
+            replaceInnerHTML("#container_results_table", data.payload);
+        }
+        else {
+            alertQueryFailure(data.payload);
+        }
+    });
 }
 
 function initGenresTable() {

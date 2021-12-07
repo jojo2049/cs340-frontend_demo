@@ -1,15 +1,20 @@
-function insertUser(form) {
-    let elements = form.elements;
-    let name = elements["name"].value;
-    let data = { name };
-    // POST the form data to server.
+function insertGenres(form) {
+    let data = extractFormData(form, ["name"]);
     postJSON("genres/insert", data)
-    // Refresh the page once we get a response.
-    .then(_ => window.location.reload());
+    .then(res => res.json())
+    .then(data => {
+        if (data.type === "success") {
+            replaceInnerHTML("#container_results_table", data.payload);
+        }
+        else {
+            alertQueryFailure(data.payload);
+        }
+    });
 }
 
-function initUsers() {
-    override("#form_genres_insert", "submit", insertUser);
+
+function initGenres() {
+    override("#form_genres_insert", "submit", insertGenres);
 }
 
-window.onload = initUsers;
+window.onload = initGenres;

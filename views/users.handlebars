@@ -14,25 +14,3 @@
         <input type="submit" value="INSERT new User">
     </form>
 </div>
-
-<div class="container">
-    <h3>Users Data</h3>
-    <table>
-        <tr>
-            <th>user_id</th>
-            <th>first_name</th>
-            <th>last_name</th>
-            <th>email</th>
-        </tr>
-        {{#each users}}
-        {{#with this}}
-        <tr>
-            <td>{{user_id}}</td>
-            <td>{{first_name}}</td>
-            <td>{{last_name}}</td>
-            <td>{{email}}</td>
-        </tr>
-        {{/with}}
-        {{/each}}
-    </table>
-</div>

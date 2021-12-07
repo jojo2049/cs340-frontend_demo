@@ -1,13 +1,15 @@
 function insertUser(form) {
-    let elements = form.elements;
-    let first_name = elements["first_name"].value;
-    let last_name = elements["last_name"].value;
-    let email = elements["email"].value;
-    let data = { first_name, last_name, email };
-    // POST the form data to server.
+    let data = extractFormData(form, ["first_name", "last_name", "email"]);
     postJSON("users/insert", data)
-    // Refresh the page once we get a response.
-    .then(_ => window.location.reload());
+    .then(res => res.json())
+    .then(data => {
+        if (data.type === "success") {
+            replaceInnerHTML("#container_results_table", data.payload);
+        }
+        else {
+            alertQueryFailure(data.payload);
+        }
+    });
 }
 
 function initUsers() {

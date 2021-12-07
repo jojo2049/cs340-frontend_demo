@@ -1,12 +1,15 @@
 function insertFoodItem(form) {
-    let elements = form.elements;
-    let name = elements["name"].value;
-    let calorie = elements["calories"].value;
-    let data = { name, calorie };
-    // POST the form data to server.
+    let data = extractFormData(form, ["name", "calorie"]);
     postJSON("food_items/insert", data)
-    // Refresh the page once we get a response.
-    .then(_ => window.location.reload());
+    .then(res => res.json())
+    .then(data => {
+        if (data.type === "success") {
+            replaceInnerHTML("#container_results_table", data.payload);
+        }
+        else {
+            alertQueryFailure(data.payload);
+        }
+    });
 }
 
 function initFoodItems() {
