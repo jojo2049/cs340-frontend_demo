@@ -1,15 +1,3 @@
-function extractFormData(form, keys) {
-    let data = {};
-    for (let key of keys) {
-        data[key] = form.elements[key].value;
-    }
-    return data;
-}
-
-function alertQueryFailure(msg) {
-    alert("QUERY FAILURE: " + msg);
-}
-
 function insertRecipe(form) {
     let data = extractFormData(form, ["user_id", "food_item_id", "quantity", "prep_time"]);
     postJSON("recipes/insert", data)

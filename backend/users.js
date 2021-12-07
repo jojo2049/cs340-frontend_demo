@@ -1,6 +1,6 @@
 function init(app, pool, hb) {
     //== Initialize helper functions.
-    const { renderPartialHTML, query, renderTableData, handler} = require("./common").init(pool, hb);
+    const { renderPartialHTML, query, renderTableData, handler, respondSuccess, respondError } = require("./common").init(pool, hb);
 
     //=Constants
     const usersKeys = [ "first_name", "last_name", "email" ];
@@ -10,8 +10,8 @@ function init(app, pool, hb) {
 
     //== INSERT
     const usersInsertSuccess = (res, results) => query(usersSelectSQL, [])
-        .then(rows => renderTableData(rows, usersHeaders, text => res.json({type: "success", payload: text})));
-    const usersInsertHandler = handler(usersKeys, usersInsertSQL, usersInsertSuccess, logError);
+        .then(rows => renderTableData(rows, usersHeaders, text => respondSuccess(res, text)));
+    const usersInsertHandler = handler(usersKeys, usersInsertSQL, usersInsertSuccess, respondError);
     app.post("/users/insert", usersInsertHandler);
 
     //== GET
@@ -24,15 +24,8 @@ function init(app, pool, hb) {
         renderPartialHTML("views/users.handlebars", context)
         .then(html => res.send(html));
     }
-    const usersGetHandler = handler([], usersSelectSQL, usersGetSuccess, logError);
+    const usersGetHandler = handler([], usersSelectSQL, usersGetSuccess, respondError);
     app.get("/users", usersGetHandler);
-
-    //== Helper
-    function logError(res, error) {
-        console.log("Error: ");
-        console.log(error);
-        res.json(error);
-    }
 
     console.log("Successfully init users.js");
 }

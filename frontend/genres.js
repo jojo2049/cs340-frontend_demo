@@ -1,14 +1,14 @@
 function insertGenres(form) {
-    let elements = form.elements;
-    let name = elements["name"].value;
-    let data = { name };
-    // POST the form data to server.
+    let data = extractFormData(form, ["name"]);
     postJSON("genres/insert", data)
-    // Refresh the page once we get a response.
-    // .then(_ => window.location.reload());
-    .then(res => res.text())
-    .then(text => {
-        replaceInnerHTML("#container_results_table", text);
+    .then(res => res.json())
+    .then(data => {
+        if (data.type === "success") {
+            replaceInnerHTML("#container_results_table", data.payload);
+        }
+        else {
+            alertQueryFailure(data.payload);
+        }
     });
 }
 

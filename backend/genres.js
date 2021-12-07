@@ -1,6 +1,6 @@
 function init(app, pool, hb) {
     //== Initialize helper functions.
-    const { renderPartialHTML, query, renderTableData, handler} = require("./common").init(pool, hb);
+    const { renderPartialHTML, query, renderTableData, handler, respondSuccess, respondError } = require("./common").init(pool, hb);
 
     //=Constants
     const genresKeys = [ "genre_id", "name" ];
@@ -10,8 +10,8 @@ function init(app, pool, hb) {
 
     //== INSERT
     const genresInsertSuccess = (res, results) => query(genresSelectSQL, [])
-        .then(rows => renderTableData(rows, genresHeaders, text => res.send(text)));
-    const genresInsertHandler = handler(["name"], genresInsertSQL, genresInsertSuccess, logError);
+        .then(rows => renderTableData(rows, genresHeaders, text => respondSuccess(res, text)));
+    const genresInsertHandler = handler(["name"], genresInsertSQL, genresInsertSuccess, respondError);
     app.post("/genres/insert", genresInsertHandler);
 
     //== GET
@@ -24,15 +24,8 @@ function init(app, pool, hb) {
         renderPartialHTML("views/genres.handlebars", context)
         .then(html => res.send(html));
     }
-    const genresGetHandler = handler([], genresSelectSQL, genresGetSuccess, logError);
+    const genresGetHandler = handler([], genresSelectSQL, genresGetSuccess, respondError);
     app.get("/genres", genresGetHandler);
-
-    //== Helper
-    function logError(res, error) {
-        console.log("Error: ");
-        console.log(error);
-        res.json(error);
-    }
 
     console.log("Successfully init genres.js");
 }

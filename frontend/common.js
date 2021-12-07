@@ -1,3 +1,15 @@
+function extractFormData(form, keys) {
+    let data = {};
+    for (let key of keys) {
+        data[key] = form.elements[key].value;
+    }
+    return data;
+}
+
+function alertQueryFailure(msg) {
+    alert("QUERY FAILURE: " + msg);
+}
+
 // Replaces the inner HTML of the selected element.
 function replaceInnerHTML(selector, html) {
     let elem = document.querySelector(selector);
