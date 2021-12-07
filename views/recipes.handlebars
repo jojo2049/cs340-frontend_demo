@@ -7,9 +7,19 @@
     <div class="container_content">
         <form id="form_recipes_insert">
             <label for="user_id">User ID:</label>
-            <input type="text" name="user_id"><br>
+            <select name="user_id">
+                {{#each user_id_to_name}}
+                <option value={{@key}}>{{this}}</option>
+                {{/each}}
+            </select>
+            <br>
             <label for="food_item_id">FoodItem ID:</label>
-            <input type="text" name="food_item_id"><br>
+            <select name="food_item_id">
+                {{#each food_item_id_to_name}}
+                <option value={{@key}}>{{this}}</option>
+                {{/each}}
+            </select>
+            <br>
             <label for="quantity">Quantity:</label>
             <input type="text" name="quantity"><br>
             <label for="prep_time">Preptime:</label>
@@ -24,11 +34,26 @@
     <div class="container_content">
         <form id="form_recipes_update">
             <label for="recipe_id">Recipe ID:</label>
-            <input type="text" name="recipe_id"><br>
+            <select name="recipe_id">
+                {{#each recipe_id_to_name}}
+                <option value={{@key}}>{{this}}</option>
+                {{/each}}
+            </select>
+            <br>
             <label for="user_id">User ID:</label>
-            <input type="text" name="user_id"><br>
+            <select name="user_id">
+                {{#each user_id_to_name}}
+                <option value={{@key}}>{{this}}</option>
+                {{/each}}
+            </select>
+            <br>
             <label for="food_item_id">FoodItem ID:</label>
-            <input type="text" name="food_item_id"><br>
+            <select name="food_item_id">
+                {{#each food_item_id_to_name}}
+                <option value={{@key}}>{{this}}</option>
+                {{/each}}
+            </select>
+            <br>
             <label for="quantity">Quantity:</label>
             <input type="text" name="quantity"><br>
             <label for="prep_time">Preptime:</label>
@@ -43,7 +68,12 @@
     <div class="container_content">
         <form id="form_recipes_delete">
             <label for="recipe_id">Recipe ID:</label>
-            <input type="text" name="recipe_id"><br>
+            <select name="recipe_id">
+                {{#each recipe_id_to_name}}
+                <option value={{@key}}>{{this}}</option>
+                {{/each}}
+            </select>
+            <br>
             <input type="submit" value="DELETE Recipe">
         </form>
     </div>
@@ -66,7 +96,12 @@
     <div class="container_content">
         <form id="form_recipes_select_genre">
             <label for="genre_id">Genre ID:</label>
-            <input type="text" name="genre_id"><br>
+            <select name="genre_id">
+                {{#each genre_id_to_name}}
+                <option value={{@key}}>{{this}}</option>
+                {{/each}}
+            </select>
+            <br>
             <input type="submit" value="SELECT Recipes in Genre">
         </form>
     </div>
@@ -77,7 +112,12 @@
     <div class="container_content">
         <form id="form_recipes_select_food_item">
             <label for="food_item_id">FoodItem ID:</label>
-            <input type="text" name="food_item_id"><br>
+            <select name="food_item_id">
+                {{#each food_item_id_to_name}}
+                <option value={{@key}}>{{this}}</option>
+                {{/each}}
+            </select>
+            <br>
             <input type="submit" value="SELECT Recipes with FoodItem">
         </form>
     </div>
@@ -88,7 +128,12 @@
     <div class="container_content">
         <form id="form_recipes_select_user">
             <label for="user_id">User ID:</label>
-            <input type="text" name="user_id"><br>
+            <select name="user_id">
+                {{#each user_id_to_name}}
+                <option value={{@key}}>{{this}}</option>
+                {{/each}}
+            </select>
+            <br>
             <input type="submit" value="SELECT Recipes by User">
         </form>
     </div>

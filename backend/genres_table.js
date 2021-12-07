@@ -1,6 +1,6 @@
 function init(app, pool, hb) {
     //== Initialize helper functions.
-    const { renderPartialHTML, query, renderTableData, handler, respondSuccess, respondError } = require("./common").init(pool, hb);
+    const { renderPartialHTML, query, renderTableData, handler, respondSuccess, respondError, queryIdsToNames} = require("./common").init(pool, hb);
 
     //=Constants
     const genres_tableKeys = [ "genre_id", "food_item_id" ];
@@ -18,12 +18,20 @@ function init(app, pool, hb) {
 
     //== GET
     const genres_tableGetSuccess = (res, rows) => {
-        let context = {
-            results_table: {headers: genres_tableHeaders, rows},
-            scripts: ["genres_table.js"]
-        };
-        renderPartialHTML("views/genres_table.handlebars", context)
-        .then(html => res.send(html));
+        let genreIdsToNames = queryIdsToNames(genres_genreidname, "genre_id", "name");
+        let foodItemIdsToNames = queryIdsToNames(genres_fooditemidname, "food_item_id", "name");
+        Promise.all([genreIdsToNames, foodItemIdsToNames])
+        .then(mappings => {
+            let [genre_id_to_name, food_item_id_to_name] = mappings;
+            let context = {
+                results_table: {headers: genres_tableHeaders, rows},
+                scripts: ["genres_table.js"],
+                genre_id_to_name,
+                food_item_id_to_name
+            };
+            renderPartialHTML("views/genres_table.handlebars", context)
+            .then(html => res.send(html));
+        });
     }
     const genres_tableGetHandler = handler([], genres_tableSelectSQL, genres_tableGetSuccess, respondError);
     app.get("/genres_table", genres_tableGetHandler);

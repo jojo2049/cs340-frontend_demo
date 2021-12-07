@@ -7,6 +7,18 @@ function init(pool, hb) {
         return hb.renderView(hb_path, context);
     }
 
+    function queryIdsToNames(sql, id_selector, name_selector) {
+        return query(sql, [])
+        .then(ids_to_names_rows => {
+            let ids_to_names = {};
+            for (let row of ids_to_names_rows) {
+                ids_to_names[row[id_selector]] = row[name_selector];
+            }
+            console.log(ids_to_names)
+            return ids_to_names;
+        });
+    }
+
     function query(sql, values) {
         return new Promise((resolve, reject) => {
             pool.query(sql, values, (error, results, fields) => {
@@ -64,6 +76,7 @@ function init(pool, hb) {
         extractValues,
         handler,
         respondError,
-        respondSuccess
+        respondSuccess,
+        queryIdsToNames
     }
 }

@@ -1,6 +1,6 @@
 function init(app, pool, hb) {
     //== Initialize helper functions.
-    const { renderPartialHTML, query, renderTableData, handler, respondSuccess, respondError } = require("./common").init(pool, hb);
+    const { renderPartialHTML, query, renderTableData, handler, respondSuccess, respondError, queryIdsToNames} = require("./common").init(pool, hb);
 
     //== Constants
     const recipesKeys = ["user_id", "food_item_id", "quantity", "prep_time"];
@@ -12,10 +12,10 @@ function init(app, pool, hb) {
     const recipesSelectUserSQL = "SELECT * FROM Recipes WHERE user_id = ?;";
     const recipesDeleteSQL = "DELETE FROM Recipes WHERE recipe_id = ?;";
     const recipesUpdateSQL = "UPDATE Recipes SET user_id=?, food_item_id=?, quantity=?, prep_time=? WHERE recipe_id = ?;";
-    const recipes_recipeidname = "SELECT Recipes.recipe_id, FoodItems.name FROM Recipes JOIN Users ON Recipes.user_id = Users.user_id JOIN FoodItems on Recipes.food_item_id = FoodItems.food_item_id ORDER BY Recipes.recipe_id;";
+    const recipes_recipeidname = "SELECT Recipes.recipe_id AS recipe_id, FoodItems.name AS name FROM Recipes JOIN Users ON Recipes.user_id = Users.user_id JOIN FoodItems on Recipes.food_item_id = FoodItems.food_item_id ORDER BY Recipes.recipe_id;";
     const recipes_genresidname = "SELECT genre_id, name from Genres;";
     const recipes_fooditemidname = "SELECT food_item_id, name from FoodItems;";
-    const recipes_useridname = "SELECT Users.user_id, CONCAT(Users.first_name, ' ', Users.last_name) FROM Users;"
+    const recipes_useridname = "SELECT Users.user_id, CONCAT(Users.first_name, ' ', Users.last_name) AS full_name FROM Users;"
 
     // These are queries to return names for rows that exist in the table. Ignore for now.
     // const recipes_recipeidname = "SELECT Recipes.recipe_id, FoodItems.name FROM Recipes JOIN Users ON Recipes.user_id = Users.user_id JOIN FoodItems on Recipes.food_item_id = FoodItems.food_item_id ORDER BY Recipes.recipe_id;";
@@ -57,22 +57,27 @@ function init(app, pool, hb) {
 
     //== GET
     const recipesGetSuccess = (res, rows) => {
-        let context = {
-            results_table: {headers: recipesHeaders, rows},
-            scripts: ["recipes.js"]
-        };
-        renderPartialHTML("views/recipes.handlebars", context)
-        .then(html => res.send(html));
+        let userIdsToNames = queryIdsToNames(recipes_useridname, "user_id", "full_name");
+        let foodItemIdsToNames = queryIdsToNames(recipes_fooditemidname, "food_item_id", "name");
+        let recipeIdsToNames = queryIdsToNames(recipes_recipeidname, "recipe_id", "name")
+        let genreIdsToNames = queryIdsToNames(recipes_genresidname, "genre_id", "name");
+        Promise.all([userIdsToNames, foodItemIdsToNames, recipeIdsToNames, genreIdsToNames])
+        .then(mappings => {
+            let [user_id_to_name, food_item_id_to_name, recipe_id_to_name, genre_id_to_name] = mappings;
+            let context = {
+                results_table: {headers: recipesHeaders, rows},
+                scripts: ["recipes.js"],
+                user_id_to_name,
+                food_item_id_to_name,
+                recipe_id_to_name,
+                genre_id_to_name
+            };
+            renderPartialHTML("views/recipes.handlebars", context)
+            .then(html => res.send(html));
+        });
     }
     const recipesGetHandler = handler([], recipesSelectSQL, recipesGetSuccess, respondError);
     app.get("/recipes", recipesGetHandler);
-
-    //== Helper
-    function logError(res, error) {
-        console.log("Error: ");
-        console.log(error);
-        res.json(error);
-    }
 
     console.log("Successfully init recipes.js");
 }
