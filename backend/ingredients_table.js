@@ -1,6 +1,6 @@
 function init(app, pool, hb) {
     //== Initialize helper functions.
-    const { renderPartialHTML, query, renderTableData, handler, respondSuccess, respondError } = require("./common").init(pool, hb);
+    const { renderPartialHTML, query, renderTableData, handler, respondSuccess, respondError, queryIdsToNames} = require("./common").init(pool, hb);
 
     //=Constants
     const ingredients_tableKeys = [ "recipe_id", "food_item_id", "quantity" ];
@@ -9,7 +9,7 @@ function init(app, pool, hb) {
     const ingredients_tableInsertSQL= "INSERT INTO IngredientsTable (recipe_id, food_item_id, quantity) VALUES (?, ?, ?);";
     const ingredients_tableDeleteSQL = "DELETE FROM IngredientsTable WHERE recipe_id = ? and food_item_id=?;";
     const ingredients_fooditemidname = "SELECT food_item_id, name FROM FoodItems;"
-    const ingredients_recipeidname = "SELECT Recipes.recipe_id, FoodItems.name FROM Recipes JOIN Users ON Recipes.user_id = Users.user_id JOIN FoodItems on Recipes.food_item_id = FoodItems.food_item_id ORDER BY Recipes.recipe_id;"
+    const ingredients_recipeidname = "SELECT Recipes.recipe_id AS recipe_id, FoodItems.name AS name FROM Recipes JOIN Users ON Recipes.user_id = Users.user_id JOIN FoodItems on Recipes.food_item_id = FoodItems.food_item_id ORDER BY Recipes.recipe_id;"
 
     //== INSERT
     const ingredients_tableInsertSuccess = (res, results) => query(ingredients_tableSelectSQL, [])
@@ -25,12 +25,20 @@ function init(app, pool, hb) {
 
     //== GET
     const ingredients_tableGetSuccess = (res, rows) => {
-        let context = {
-            results_table: {headers: ingredients_tableHeaders, rows},
-            scripts: ["ingredients_table.js"]
-        };
-        renderPartialHTML("views/ingredients_table.handlebars", context)
-        .then(html => res.send(html));
+        let foodItemIdsToNames = queryIdsToNames(ingredients_fooditemidname, "food_item_id", "name");
+        let recipeIdsToNames = queryIdsToNames(ingredients_recipeidname, "recipe_id", "name")
+        Promise.all([foodItemIdsToNames, recipeIdsToNames])
+        .then(mappings => {
+            let [food_item_id_to_name, recipe_id_to_name] = mappings;
+            let context = {
+                results_table: {headers: ingredients_tableHeaders, rows},
+                scripts: ["ingredients_table.js"],
+                food_item_id_to_name,
+                recipe_id_to_name
+            };
+            renderPartialHTML("views/ingredients_table.handlebars", context)
+            .then(html => res.send(html));
+        });
     }
     const ingredients_tableGetHandler = handler([], ingredients_tableSelectSQL, ingredients_tableGetSuccess, respondError);
     app.get("/ingredients_table", ingredients_tableGetHandler);
