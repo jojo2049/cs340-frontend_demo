@@ -5,7 +5,7 @@ function init(app, pool, hb) {
     //=Constants
     const ingredients_tableKeys = [ "recipe_id", "food_item_id", "quantity" ];
     const ingredients_tableHeaders = [ "Recipe ID", "Recipe Name", "Food Item ID", "Ingredient Name", "Quantity" ];
-    const ingredients_tableSelectSQL = "SELECT A.recipe_ID, D.name, A.food_item_id, C.name, A.quantity FROM IngredientsTable A JOIN Recipes B ON A.recipe_id = B.recipe_id JOIN FoodItems C ON A.food_item_id = C.food_item_id JOIN FoodItems D ON B.food_item_id = D.food_item_id;";
+    const ingredients_tableSelectSQL = "SELECT A.recipe_ID, D.name as RecipeName, A.food_item_id, C.name, A.quantity FROM IngredientsTable A JOIN Recipes B ON A.recipe_id = B.recipe_id JOIN FoodItems C ON A.food_item_id = C.food_item_id JOIN FoodItems D ON B.food_item_id = D.food_item_id;";
     const ingredients_tableInsertSQL= "INSERT INTO IngredientsTable (recipe_id, food_item_id, quantity) VALUES (?, ?, ?);";
     const ingredients_tableDeleteSQL = "DELETE FROM IngredientsTable WHERE recipe_id = ? and food_item_id=?;";
     const ingredients_fooditemidname = "SELECT food_item_id, name FROM FoodItems;"
