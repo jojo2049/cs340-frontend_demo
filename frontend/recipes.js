@@ -1,85 +1,26 @@
-function insertRecipe(form) {
-    let elements = form.elements;
-    let user_id = elements["user_id"].value;
-    let food_item_id = elements["food_item_id"].value;
-    let quantity = elements["quantity"].value;
-    let prep_time = elements["prep_time"].value;
-    let data = { user_id, food_item_id, quantity, prep_time };
-    // POST the form data to server.
-    postJSON("recipes/insert", data)
-    .then(res => res.text())
-    .then(text => {
-        replaceInnerHTML("#container_results_table", text);
-    });
-}
+const insertRecipe = form =>
+    postJSON("recipes/insert", extractFormData(form, ["user_id", "food_item_id", "quantity", "prep_time"]))
+    .then(handleServerResponse(updateTableData, alertQueryFailure));
 
-function updateRecipe(form) {
-    let elements = form.elements;
-    let recipe_id = elements["recipe_id"].value
-    let user_id = elements["user_id"].value;
-    let food_item_id = elements["food_item_id"].value;
-    let quantity = elements["quantity"].value;
-    let prep_time = elements["prep_time"].value;
-    let data = { user_id, food_item_id, quantity, prep_time, recipe_id };
-    // POST the form data to server.
-    postJSON("recipes/update", data)
-    .then(res => res.text())
-    .then(text => {
-        replaceInnerHTML("#container_results_table", text);
-    });
-}
+const updateRecipe = form =>
+    postJSON("recipes/update", extractFormData(form, ["user_id", "food_item_id", "quantity", "prep_time", "recipe_id"]))
+    .then(handleServerResponse(updateTableData, alertQueryFailure));
 
-function selectRecipesInGenre(form) {
-    let elements = form.elements;
-    console.log(elements)
-    let genre_id = elements["genre_id"].value;
-    let data = { genre_id };
-    console.log("SELECT query: " + JSON.stringify(data))
-    postJSON("recipes/select/genre", data)
-    .then(res => res.text())
-    .then(text => {
-        replaceInnerHTML("#container_results_table", text);
-    });
-}
+const selectRecipesInGenre = form => 
+    postJSON("recipes/select/genre", extractFormData(form, ["genre_id"]))
+    .then(handleServerResponse(updateTableData, alertQueryFailure));
 
-function selectRecipesByFoodItem(form) {
-    let elements = form.elements;
-    console.log(elements)
-    let food_item_id = elements["food_item_id"].value;
-    let data = { food_item_id };
-    console.log("SELECT query: " + JSON.stringify(data))
-    postJSON("recipes/select/food_item", data)
-    .then(res => res.text())
-    .then(text => {
-        replaceInnerHTML("#container_results_table", text);
-    });
-}
+const selectRecipesByFoodItem = form => 
+    postJSON("recipes/select/food_item", extractFormData(form, ["food_item_id"]))
+    .then(handleServerResponse(updateTableData, alertQueryFailure));
 
-function selectRecipesByUser(form) {
-    let elements = form.elements;
-    console.log(elements)
-    let user_id = elements["user_id"].value;
-    let data = { user_id };
-    console.log("SELECT query: " + JSON.stringify(data))
-    postJSON("recipes/select/user", data)
-    .then(res => res.text())
-    .then(text => {
-        replaceInnerHTML("#container_results_table", text);
-    });
-}
+const selectRecipesByUser = form =>
+    postJSON("recipes/select/user", extractFormData(form, ["user_id"]))
+    .then(handleServerResponse(updateTableData, alertQueryFailure));
 
-function deleteRecipe(form){
-  let elements = form.elements;
-  console.log(elements)
-  let recipe_id = elements["recipe_id"].value;
-  let data = { recipe_id };
-  // POST the form data to server.
-  postJSON("recipes/delete", data)
-  .then(res => res.text())
-  .then(text => {
-      replaceInnerHTML("#container_results_table", text);
-  })
-}
+const deleteRecipe = form =>
+    postJSON("recipes/delete", extractFormData(form, ["recipe_id"]))
+    .then(handleServerResponse(updateTableData, alertQueryFailure));
 
 function initRecipes() {
     override("#form_recipes_insert", "submit", insertRecipe);
@@ -89,8 +30,5 @@ function initRecipes() {
     override("#form_recipes_delete", "submit", deleteRecipe);
     override("#form_recipes_update", "submit", updateRecipe);
 }
-
-
-
 
 window.onload = initRecipes;

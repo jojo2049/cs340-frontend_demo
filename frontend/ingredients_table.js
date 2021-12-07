@@ -1,22 +1,29 @@
 function insertIngredientsTable(form) {
-    let elements = form.elements;
-    let recipe_id = elements["recipe_id"].value;
-    let food_item_id = elements["food_item_id"].value;
-    let quantity = elements["quantity"].value;
-    let data = { recipe_id, food_item_id, quantity };
-    // POST the form data to server.
+    let data = extractFormData(form, ["recipe_id", "food_item_id", "quantity"]);
     postJSON("ingredients_table/insert", data)
-    // Refresh the page once we get a response.
-    .then(_ => window.location.reload());
+    .then(res => res.json())
+    .then(data => {
+        if (data.type === "success") {
+            replaceInnerHTML("#container_results_table", data.payload);
+        }
+        else {
+            alertQueryFailure(data.payload);
+        }
+    });
 }
 
 function deleteIngredientsTable(form){
-    let elements = form.elements;
-    let recipe_id = elements["recipe_id"].value;
-    let food_item_id = elements["food_item_id"].value;
-     let data = { recipe_id, food_item_id };
-     postJSON("ingredients_table/delete", data)
-     .then(_ => window.location.reload());
+    let data = extractFormData(form, ["recipe_id", "food_item_id"]);
+    postJSON("ingredients_table/delete", data)
+    .then(res => res.json())
+    .then(data => {
+        if (data.type === "success") {
+            replaceInnerHTML("#container_results_table", data.payload);
+        }
+        else {
+            alertQueryFailure(data.payload);
+        }
+    });
 }
 
 function initIngredientsTable() {
